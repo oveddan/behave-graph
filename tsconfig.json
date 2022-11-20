@@ -5,6 +5,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "jsx": "react",
     "pretty": true,
     "strict": true,
     "skipLibCheck": true,
@@ -15,7 +16,7 @@
     "noImplicitThis": false,
     "baseUrl": "./"
   },
-  "include": ["packages/lib/src", "packages/lib/exec-graph/exec-graph.ts"],
+  "include": ["packages/**/*"],
   "exclude": ["**/*node_modules", "dist", "*.test.ts"],
   "typedocOptions": {
     "mode": "modules",
