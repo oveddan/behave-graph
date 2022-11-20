@@ -1,11 +1,8 @@
-import { Suspense, useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import { Suspense, useCallback, useEffect, useState, useRef } from 'react';
 import FlowEditor from './flowEditor/FlowEditorApp';
-import { useSceneModificationEngine } from './hooks/behaviorFlow';
+import { useRegistry } from './hooks/useRegistry';
 import Scene from './scene/Scene';
-import { ObjectMap } from '@react-three/fiber';
-import { GLTF } from 'three-stdlib';
 import { flowToBehave } from './flowEditor/transformers/flowToBehave';
-import useLoadSceneAndRegistry from './hooks/useLoadSceneAndRegistry';
 import SplitPane from 'react-split-pane';
 import { VscSplitVertical, VscSplitHorizontal } from 'react-icons/vsc';
 import clsx from 'clsx';
@@ -16,6 +13,9 @@ import GltfLoader from './scene/GltfLoader';
 import '@rainbow-me/rainbowkit/styles.css';
 import './styles/resizer.css';
 import useSetAndLoadModelFile from './hooks/useSetAndLoadModelFile';
+import useSceneModifier from './scene/useSceneModifier';
+import useNodeSpecJson from './hooks/useNodeSpecJson';
+import { useEngine } from './hooks/useEngine';
 
 type splitDirection = 'vertical' | 'horizontal';
 
@@ -65,16 +65,18 @@ const TogglePaneButtons = (props: TogglePangeButtonProps) => (
 );
 
 function App() {
-  const saveAndLoadProps = useGraphJsonFlow();
 
-  const [gltf, setGltf] = useState<GLTF & ObjectMap>();
-  const { modelFile, setModelFile  } = useSetAndLoadModelFile();
+  const { modelFile, setModelFile, gltf, setGltf  } = useSetAndLoadModelFile();
 
-  const { nodes, edges, onNodesChange, onEdgesChange, graphJson, setGraphJson } = saveAndLoadProps;
+  const { scene, animations, sceneOnClickListeners, registerSceneProfile } = useSceneModifier(gltf);
 
-  const { scene, animations, sceneOnClickListeners, registry, specJson, lifecyleEmitter } = useLoadSceneAndRegistry({
-    gltf
+  const { registry, lifecyleEmitter } = useRegistry({
+    registerProfiles: registerSceneProfile
   });
+
+  const specJson = useNodeSpecJson(registry);
+
+  const { nodes, edges, onNodesChange, onEdgesChange, graphJson, setGraphJson } = useGraphJsonFlow(specJson);
 
   useEffect(() => {
     if (!specJson) return;
@@ -82,7 +84,7 @@ function App() {
     setGraphJson(graphJson);
   }, [nodes, edges, specJson]);
 
-  const { togglePlay, playing} = useSceneModificationEngine({
+  const { togglePlay, playing} = useEngine({
     graphJson,
     registry,
     eventEmitter: lifecyleEmitter,
@@ -152,6 +154,7 @@ function App() {
             )}
           </div>
         </SplitPane>
+        {/* @ts-ignore */}
         <GltfLoader fileUrl={modelFile?.dataUri} setGltf={setGltf} />
       </div>
     </>

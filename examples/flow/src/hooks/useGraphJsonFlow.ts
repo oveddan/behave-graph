@@ -1,10 +1,11 @@
 import { useState, useCallback, useEffect } from 'react';
-import { GraphJSON } from 'behave-graph';
+import { GraphJSON, NodeSpecJSON } from 'behave-graph';
 import { behaveToFlow } from '../flowEditor/transformers/behaveToFlow';
 import { hasPositionMetaData } from '../flowEditor/util/hasPositionMetaData';
 import { autoLayout } from '../flowEditor/util/autoLayout';
 import { useNodesState, useEdgesState } from 'reactflow';
 import { examplePairs } from '../flowEditor/components/LoadModal';
+import { flowToBehave } from '../flowEditor/transformers/flowToBehave';
 
 function readFileContents(file: File) {
   return new Promise<string | ArrayBuffer>((resolve, reject) => {
@@ -60,7 +61,7 @@ export const fetchModelFile = async (url: string, fileName: string) => {
   return file;
 };
 
-const useGraphJsonFlow = () => {
+const useGraphJsonFlow = (specJson: NodeSpecJSON[] | undefined) => {
   const [graphJson, setGraphJson] = useState<GraphJSON>();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -89,6 +90,12 @@ const useGraphJsonFlow = () => {
       handleGraphJsonLoaded(fetched as GraphJSON);
     })();
   }, [handleGraphJsonLoaded]);
+
+  useEffect(() => {
+    if (!specJson) return;
+    const graphJson = flowToBehave({ nodes, edges, nodeSpecJSON: specJson });
+    setGraphJson(graphJson);
+  }, [nodes, edges, specJson]);
 
   return {
     handleGraphJsonLoaded,

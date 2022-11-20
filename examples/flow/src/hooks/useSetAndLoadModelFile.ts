@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { GraphJSON } from 'behave-graph';
 import { examplePairs } from '../flowEditor/components/LoadModal';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
+import { ObjectMap } from '@react-three/fiber';
 
 function readFileContents(file: File) {
   return new Promise<string | ArrayBuffer>((resolve, reject) => {
@@ -62,6 +64,8 @@ const useSetAndLoadModelFile = () => {
     dataUri: string;
   }>();
 
+  const [gltf, setGltf] = useState<GLTF & ObjectMap|undefined>();
+
   const setModelFile = useCallback (async (modelFile: File) => {
     const modelFileDataUrl = (await dataUrlFromFile(modelFile)) as string;
     setModelFileAndDataUri({ file: modelFile, dataUri: modelFileDataUrl });
@@ -80,12 +84,12 @@ const useSetAndLoadModelFile = () => {
     setModelFileUrl(modelFileUrl, defaultModelFile);
   }, []);
 
-  
-
   return {
     setModelFileUrl,
     setModelFile,
     modelFile,
+    gltf,
+    setGltf
   };
 };
 

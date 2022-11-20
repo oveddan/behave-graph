@@ -1,66 +1,13 @@
 import {
-  DefaultLogger,
   Engine,
-  Graph,
   GraphJSON,
   ILifecycleEventEmitter,
-  ILogger,
-  ManualLifecycleEventEmitter,
-  NodeSpecJSON,
   readGraphFromJSON,
-  registerCoreProfile,
   Registry,
 } from 'behave-graph';
 import { useCallback, useEffect, useState } from 'react';
-import { getNodeSpecJSON } from '../flowEditor/util/getNodeSpecJSON';
-import { IScene } from '../abstractions';
-import { registerSharedSceneProfiles, registerSpecificSceneProfiles } from './profiles';
 
-export const useRegistry = ({
-  scene,
-}: {
-  scene: IScene | undefined;
-}) => {
-  const [registry, setRegistry] = useState<Registry>();
-
-  const [lifecyleEmitter, setLifecycleEmitter] = useState<ILifecycleEventEmitter>(new ManualLifecycleEventEmitter());
-  const [logger] = useState<ILogger>(new DefaultLogger());
-
-  const [specJson, setSpecJson] = useState<NodeSpecJSON[]>();
-
-  useEffect(() => {
-    if (!scene) return;
-    const registry = new Registry();
-    const lifecyleEmitter = new ManualLifecycleEventEmitter();
-    registerCoreProfile(registry, logger, lifecyleEmitter);
-    registerSharedSceneProfiles(registry, scene);
-    registerSpecificSceneProfiles(registry, scene);
-    const specJson = getNodeSpecJSON(registry);
-
-    setRegistry(registry);
-    setSpecJson(specJson);
-    setLifecycleEmitter(lifecyleEmitter);
-  }, [scene, logger]);
-
-  return { registry, specJson, lifecyleEmitter, logger };
-};
-
-export const useGraph = (graphJson: GraphJSON | undefined, registry: Registry | undefined) => {
-  const [graph, setGraph] = useState<Graph>();
-
-  useEffect(() => {
-    if (!graphJson || !registry) {
-      setGraph(undefined);
-      return;
-    }
-
-    setGraph(readGraphFromJSON(graphJson, registry));
-  }, [graphJson, registry]);
-
-  return graph;
-};
-
-export const useSceneModificationEngine = ({
+export const useEngine = ({
   graphJson,
   registry,
   eventEmitter,

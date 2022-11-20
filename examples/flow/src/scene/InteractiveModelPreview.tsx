@@ -1,20 +1,22 @@
-import { ObjectMap } from '@react-three/fiber';
 import { useEffect, useState } from 'react';
 import { GraphJSON } from 'behave-graph';
 import { useGLTF } from '@react-three/drei';
-import useLoadSceneAndRegistry from '../hooks/useLoadSceneAndRegistry';
 import Scene from './Scene';
 import { dataUrlFromFile } from '../hooks/useGraphJsonFlow';
-import { useSceneModificationEngine } from '../hooks/behaviorFlow';
+import { useEngine } from '../hooks/useEngine';
+import useSceneModifier from './useSceneModifier';
+import { useRegistry } from '../hooks/useRegistry';
 
 const Inner = ({ fileDataUrl, graphJson }: { fileDataUrl: string; graphJson: GraphJSON }) => {
   const gltf = useGLTF(fileDataUrl);
 
-  const { animations, sceneOnClickListeners, lifecyleEmitter, registry } = useLoadSceneAndRegistry({
-    gltf
+  const { animations, sceneOnClickListeners, registerSceneProfile } = useSceneModifier(gltf);
+
+  const { lifecyleEmitter, registry } = useRegistry({
+    registerProfiles: registerSceneProfile
   });
 
-  useSceneModificationEngine({
+  useEngine({
     graphJson,
     registry,
     eventEmitter: lifecyleEmitter,
