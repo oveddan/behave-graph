@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { VscSplitHorizontal, VscSplitVertical } from "react-icons/vsc";
 import SplitPane from "react-split-pane";
 
@@ -72,6 +72,10 @@ const SplitEditor = ({
   }, []);
 
   const [splitDirection, setSplitDirection] = useState<splitDirection>('vertical');
+
+  useEffect(() => {
+    handleSplitResized();
+  }, [handleSplitResized, splitDirection]);
 
   return (
   <>

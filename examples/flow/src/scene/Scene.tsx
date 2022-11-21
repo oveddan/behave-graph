@@ -77,7 +77,7 @@ const Scene = ({ gltf, onClickListeners, animationsState }: SceneProps) => {
 
   return (
     <Canvas>
-      <OrbitControls makeDefault target={mainRef?.position} />
+      {mainRef && <OrbitControls makeDefault target={mainRef.position} />}
 
       {gltf && (
         <>

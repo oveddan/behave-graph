@@ -40,7 +40,7 @@ function App() {
   const controls = specJson && (
     <Controls
       toggleRun={togglePlay}
-      specJson={specJson}
+      graphJson={graphJson}
       running={playing}
       setModelFile={setModelFile}
       handleGraphJsonLoaded={handleGraphJsonLoaded}

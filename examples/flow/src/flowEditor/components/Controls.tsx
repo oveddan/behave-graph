@@ -21,14 +21,14 @@ import { GraphJSON, NodeSpecJSON } from 'behave-graph';
 
 const CustomControls = ({
   toggleRun,
-  specJson,
+  graphJson,
   running,
   handleGraphJsonLoaded,
   setModelFile,
   additionalControls = null,
 }: {
   toggleRun: () => void;
-  specJson: NodeSpecJSON[];
+  graphJson: GraphJSON|undefined;
   running: boolean;
   additionalControls?: JSX.Element | null;
   handleGraphJsonLoaded: (value: GraphJSON) => void;
@@ -65,7 +65,7 @@ const CustomControls = ({
         handleGraphJsonLoaded={handleGraphJsonLoaded}
         setModelFile={setModelFile}
       />
-      <SaveModal open={saveModalOpen} onClose={() => setSaveModalOpen(false)} specJson={specJson} />
+      <SaveModal open={saveModalOpen} onClose={() => setSaveModalOpen(false)} graphJson={graphJson} />
       <HelpModal open={helpModalOpen} onClose={() => setHelpModalOpen(false)} />
       <ClearModal open={clearModalOpen} onClose={() => setClearModalOpen(false)} />
     </>
