@@ -23,7 +23,7 @@ const CustomControls = ({
   toggleRun,
   specJson,
   running,
-  setGraphJson,
+  handleGraphJsonLoaded,
   setModelFile,
   additionalControls = null,
 }: {
@@ -31,8 +31,8 @@ const CustomControls = ({
   specJson: NodeSpecJSON[];
   running: boolean;
   additionalControls?: JSX.Element | null;
-  setGraphJson: (value: GraphJSON) => void;
-  setModelFile: (file: File)=> void; 
+  handleGraphJsonLoaded: (value: GraphJSON) => void;
+  setModelFile: (file: File|undefined)=> void; 
 }) => {
   const [loadModalOpen, setLoadModalOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
@@ -62,7 +62,7 @@ const CustomControls = ({
       <LoadModal
         open={loadModalOpen}
         onClose={() => setLoadModalOpen(false)}
-        setGraphJson={setGraphJson}
+        handleGraphJsonLoaded={handleGraphJsonLoaded}
         setModelFile={setModelFile}
       />
       <SaveModal open={saveModalOpen} onClose={() => setSaveModalOpen(false)} specJson={specJson} />

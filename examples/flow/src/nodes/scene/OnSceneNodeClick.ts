@@ -33,7 +33,6 @@ export class OnSceneNodeClick extends EventNode {
 
   init(engine: Engine) {
     const jsonPath = this.readInput('jsonPath') as string;
-    console.log({ jsonPath });
     if (!jsonPath) return;
     Assert.mustBeTrue(this.handleNodeClick === undefined);
 

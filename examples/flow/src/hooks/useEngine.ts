@@ -76,7 +76,6 @@ export const useEngine = ({
     })();
 
     return () => {
-      console.log('clear timeout');
       window.clearTimeout(timeout);
     };
   }, [eventEmitter, engine, run]);

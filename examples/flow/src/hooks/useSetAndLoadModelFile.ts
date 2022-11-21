@@ -66,7 +66,11 @@ const useSetAndLoadModelFile = () => {
 
   const [gltf, setGltf] = useState<GLTF & ObjectMap|undefined>();
 
-  const setModelFile = useCallback (async (modelFile: File) => {
+  const setModelFile = useCallback (async (modelFile: File | undefined) => {
+    if (!modelFile) {
+      setModelFileAndDataUri(undefined);
+      return;
+    }
     const modelFileDataUrl = (await dataUrlFromFile(modelFile)) as string;
     setModelFileAndDataUri({ file: modelFile, dataUri: modelFileDataUrl });
   }, []);

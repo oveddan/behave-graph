@@ -9,7 +9,6 @@ const PathSelect = ({
   short,
 }: { value: string; onChange: (path: string | undefined) => void; short: boolean } & Pick<IScene, 'getProperties'>) => {
   const [initialValue] = useState<Path | undefined>(() => {
-    console.log('parsing:', value, short);
     if (value) {
       const result = parseJsonPath(value, short);
       return result;
@@ -31,8 +30,6 @@ const PathSelect = ({
       },
       short
     );
-
-    console.log('got json path string', jsonPath);
 
     onChange(jsonPath);
   }, [resourceType, elementId, property, onChange, short]);

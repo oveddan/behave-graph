@@ -81,11 +81,11 @@ const Scene = ({ gltf, onClickListeners, animationsState }: SceneProps) => {
 
       {gltf && (
         <>
-          <Stage shadows adjustCamera={false} intensity={1} environment="city" preset="rembrandt">
+          {/* <Stage shadows adjustCamera={false} intensity={1} > */}
             <primitive object={gltf.scene} ref={setMainRef}>
               <RegisterOnClickListeners gltf={gltf} onClickListeners={onClickListeners} />
             </primitive>
-          </Stage>
+          {/* </Stage> */}
           <ToggleAnimations gltf={gltf} animationsState={animationsState} />
         </>
       )}

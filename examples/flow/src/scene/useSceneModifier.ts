@@ -1,10 +1,11 @@
 import { ObjectMap } from '@react-three/fiber';
 import { GLTF } from 'three-stdlib';
-import { Vec3, Vec4 } from 'behave-graph';
+import { NodeTypeRegistry, Registry, Vec3, Vec4 } from 'behave-graph';
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { Material, MeshBasicMaterial, Object3D, Quaternion, Vector3, Vector4 } from 'three';
 import { IScene, Properties, ResourceTypes } from '../abstractions';
 import { GLTFJson } from './GLTFJson';
+import { registerSharedSceneProfiles, registerSpecificSceneProfiles } from '../hooks/profiles';
 
 function toVec3(value: Vector3): Vec3 {
   return new Vec3(value.x, value.y, value.z);
@@ -328,7 +329,13 @@ const useSceneModifier = (gltf: (GLTF & ObjectMap) | undefined) => {
     }
   }, [gltf, setSceneOnClickListeners, setAnimationActive]);
 
-  return { scene, animations: activeAnimations, sceneOnClickListeners };
+  const registerSceneProfile = useCallback((registry: Registry) => {
+    if (!scene) return;
+    registerSharedSceneProfiles(registry, scene);
+    registerSpecificSceneProfiles(registry, scene);
+  }, [scene]);
+
+  return { scene, animations: activeAnimations, sceneOnClickListeners, registerSceneProfile };
 };
 
 export default useSceneModifier;

@@ -93,6 +93,7 @@ const useGraphJsonFlow = (specJson: NodeSpecJSON[] | undefined) => {
 
   useEffect(() => {
     if (!specJson) return;
+    // when nodes and edges are updated, update the graph json with the flow to behave behavior
     const graphJson = flowToBehave({ nodes, edges, nodeSpecJSON: specJson });
     setGraphJson(graphJson);
   }, [nodes, edges, specJson]);
@@ -104,10 +105,7 @@ const useGraphJsonFlow = (specJson: NodeSpecJSON[] | undefined) => {
     onEdgesChange,
     onNodesChange,
     graphJson,
-    setGraphJson,
   };
 };
 
 export default useGraphJsonFlow;
-
-export type UseGraphJsonFlowParams = ReturnType<typeof useGraphJsonFlow>;

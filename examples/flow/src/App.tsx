@@ -1,8 +1,7 @@
 import { Suspense, useCallback, useEffect, useState, useRef } from 'react';
-import FlowEditor from './flowEditor/FlowEditorApp';
+import FlowEditor from './flowEditor/FlowEditor';
 import { useRegistry } from './hooks/useRegistry';
 import Scene from './scene/Scene';
-import { flowToBehave } from './flowEditor/transformers/flowToBehave';
 import SplitPane from 'react-split-pane';
 import { VscSplitVertical, VscSplitHorizontal } from 'react-icons/vsc';
 import clsx from 'clsx';
@@ -16,53 +15,7 @@ import useSetAndLoadModelFile from './hooks/useSetAndLoadModelFile';
 import useSceneModifier from './scene/useSceneModifier';
 import useNodeSpecJson from './hooks/useNodeSpecJson';
 import { useEngine } from './hooks/useEngine';
-
-type splitDirection = 'vertical' | 'horizontal';
-
-const TogglePaneButton = ({
-  splitDirection,
-  buttonSplitDirection,
-  setSplitDirection,
-  children,
-}: TogglePangeButtonProps & {
-  buttonSplitDirection: splitDirection;
-  children: JSX.Element[];
-}) => {
-  const active = buttonSplitDirection === splitDirection;
-  return (
-    <button
-      type="button"
-      className={clsx('font-medium text-sm p-2 text-center inline-flex items-center mr-2', {
-        'text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800':
-          active,
-        'text-gray-700 border border-gray-700 hover:bg-gray-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-300 dark:border-gray-500 dark:text-gray-500 dark:hover:text-white dark:focus:ring-gray-800':
-          !active,
-      })}
-      onClick={() => setSplitDirection(buttonSplitDirection)}
-    >
-      {children}
-    </button>
-  );
-};
-
-type TogglePangeButtonProps = {
-  splitDirection: 'vertical' | 'horizontal';
-  setSplitDirection: (dir: splitDirection) => void;
-};
-
-const TogglePaneButtons = (props: TogglePangeButtonProps) => (
-  <>
-    <TogglePaneButton {...props} buttonSplitDirection="vertical">
-      <VscSplitHorizontal />
-      <span className="sr-only">Split Vertical</span>
-    </TogglePaneButton>
-
-    <TogglePaneButton {...props} buttonSplitDirection="horizontal">
-      <VscSplitVertical />
-      <span className="sr-only">Split Horizontal</span>
-    </TogglePaneButton>
-  </>
-);
+import SplitEditor from './flowEditor/components/SplitEditor';
 
 function App() {
 
@@ -76,13 +29,7 @@ function App() {
 
   const specJson = useNodeSpecJson(registry);
 
-  const { nodes, edges, onNodesChange, onEdgesChange, graphJson, setGraphJson } = useGraphJsonFlow(specJson);
-
-  useEffect(() => {
-    if (!specJson) return;
-    const graphJson = flowToBehave({ nodes, edges, nodeSpecJSON: specJson });
-    setGraphJson(graphJson);
-  }, [nodes, edges, specJson]);
+  const { nodes, edges, onNodesChange, onEdgesChange, graphJson, handleGraphJsonLoaded } = useGraphJsonFlow(specJson);
 
   const { togglePlay, playing} = useEngine({
     graphJson,
@@ -90,75 +37,51 @@ function App() {
     eventEmitter: lifecyleEmitter,
   });
 
-  const rightRef = useRef<HTMLDivElement | null>(null);
-
-  const [dimensions, setDimensions] = useState<{ width: number; height: number }>();
-
-  const handleSplitResized = useCallback(() => {
-    if (rightRef.current) {
-      const boundingRect = rightRef.current.getBoundingClientRect();
-      setDimensions({
-        height: boundingRect.height,
-        width: boundingRect.width,
-      });
-    }
-  }, []);
-
-  const [splitDirection, setSplitDirection] = useState<splitDirection>('vertical');
-
-  useEffect(() => {
-    handleSplitResized();
-  }, [handleSplitResized, splitDirection]);
-
   const controls = specJson && (
     <Controls
       toggleRun={togglePlay}
       specJson={specJson}
       running={playing}
       setModelFile={setModelFile}
-      setGraphJson={setGraphJson}
+      handleGraphJsonLoaded={handleGraphJsonLoaded}
     />
   );
 
+  const flowEditor = controls && scene && (
+    <FlowEditor
+        nodes={nodes}
+        onNodesChange={onNodesChange}
+        edges={edges}
+        onEdgesChange={onEdgesChange}
+        specJson={specJson}
+        scene={scene}
+        controls={controls}
+      />
+    )
+
+  const interactiveModelPreview = modelFile && <Scene gltf={gltf} onClickListeners={sceneOnClickListeners} animationsState={animations} />
+
+  if (interactiveModelPreview) 
+    return (
+        <>
+          <div className="w-full h-full relative" >
+            <SplitEditor 
+              left={flowEditor}   
+              right={interactiveModelPreview}
+            />
+          </div>
+          {/* @ts-ignore */}
+          <GltfLoader fileUrl={modelFile?.dataUri} setGltf={setGltf} />
+      </>
+    );
+
   return (
     <>
-      <div className="w-full h-full relative" >
-        <div
-          className={clsx('absolute right-2 z-50', {
-            'top-14': splitDirection === 'horizontal',
-            'top-2': splitDirection === 'vertical',
-          })}
-        >
-          <TogglePaneButtons setSplitDirection={setSplitDirection} splitDirection={splitDirection} />
-        </div>
-        {/* @ts-ignore */}
-        <SplitPane split={splitDirection} defaultSize={800} onChange={handleSplitResized}>
-          <div className="w-full h-full">
-            {controls && scene && (
-              <FlowEditor
-                nodes={nodes}
-                onNodesChange={onNodesChange}
-                edges={edges}
-                onEdgesChange={onEdgesChange}
-                specJson={specJson}
-                scene={scene}
-                controls={controls}
-              />
-            )}
-          </div>
-          <div className="w-full h-full overflow-hidden" ref={rightRef}>
-            {dimensions && (
-              <div style={{ ...dimensions }} className="absolute z-40">
-                <Scene gltf={gltf} onClickListeners={sceneOnClickListeners} animationsState={animations} />
-              </div>
-            )}
-          </div>
-        </SplitPane>
-        {/* @ts-ignore */}
-        <GltfLoader fileUrl={modelFile?.dataUri} setGltf={setGltf} />
+      <div className="w-full h-full relative">
+         {flowEditor}
       </div>
     </>
-  );
+  )
 }
 
 function AppWrapper() {
