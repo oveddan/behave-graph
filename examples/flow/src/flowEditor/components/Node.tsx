@@ -5,12 +5,11 @@ import NodeContainer from './NodeContainer';
 import OutputSocket from './OutputSocket';
 import { useChangeNodeData } from '../hooks/useChangeNodeData';
 import { isHandleConnected } from '../util/isHandleConnected';
-import { ISceneWithQueries } from '../../abstractions';
 
 type NodeProps = FlowNodeProps & {
   spec: NodeSpecJSON;
   allSpecs: NodeSpecJSON[];
-} & Pick<ISceneWithQueries, 'getProperties'>;
+};
 
 const getTitle = (type: string) => {
   const tokens = type.split('/');
@@ -29,7 +28,7 @@ const getPairs = <T, U>(arr1: T[], arr2: U[]) => {
   return pairs;
 };
 
-export const Node = ({ id, data, spec, selected, allSpecs, getProperties }: NodeProps) => {
+export const Node = ({ id, data, spec, selected, allSpecs }: NodeProps) => {
   const edges = useEdges();
   const handleChange = useChangeNodeData(id);
   const pairs = getPairs(spec.inputs, spec.outputs);
@@ -47,8 +46,6 @@ export const Node = ({ id, data, spec, selected, allSpecs, getProperties }: Node
               value={data[input.name] ?? input.defaultValue}
               onChange={handleChange}
               connected={isHandleConnected(edges, id, input.name, 'target')}
-              getProperties={getProperties}
-              shortJsonPath={shortJsonPath}
             />
           )}
           {output && (

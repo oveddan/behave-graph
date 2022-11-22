@@ -1,12 +1,11 @@
 import { NodeSpecJSON } from '@behave-graph/core';
 import { NodeTypes } from 'reactflow';
-import { ISceneWithQueries } from '../../abstractions';
 import { Node } from '../components/Node';
 
-const getCustomNodeTypes = (allSpecs: NodeSpecJSON[], scene: ISceneWithQueries) => {
+const getCustomNodeTypes = (allSpecs: NodeSpecJSON[]) => {
   return allSpecs.reduce((nodes, node) => {
     nodes[node.type] = (props) => (
-      <Node spec={node} allSpecs={allSpecs} {...props} getProperties={scene.getProperties} />
+      <Node spec={node} allSpecs={allSpecs} {...props} />
     );
     return nodes;
   }, {} as NodeTypes);

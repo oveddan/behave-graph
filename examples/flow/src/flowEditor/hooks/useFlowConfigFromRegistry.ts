@@ -2,7 +2,6 @@ import { NodeSpecJSON } from '@behave-graph/core';
 import { useEffect, useState } from 'react';
 import { Node, NodeTypes, OnConnectStartParams } from 'reactflow';
 
-import { ISceneWithQueries } from '../../abstractions';
 import { NodePickerFilters } from '../components/NodePicker';
 import getCustomNodeTypes from '../util/getCustomNodeTypes';
 import { getNodePickerFilters } from '../util/getPickerFilters';
@@ -10,13 +9,11 @@ import { getNodePickerFilters } from '../util/getPickerFilters';
 const useFlowConfigFromRegistry = ({
   nodes,
   lastConnectStart,
-  specJson,
-  scene
+  specJson
 }: {
   nodes: Node<any>[];
   lastConnectStart: OnConnectStartParams | undefined;
   specJson: NodeSpecJSON[];
-  scene: ISceneWithQueries;
 }) => {
   const [filters, setFilters] = useState<NodePickerFilters | undefined>();
 
@@ -31,10 +28,10 @@ const useFlowConfigFromRegistry = ({
 
   useEffect(() => {
     if (!specJson) return;
-    const customNodeTypes = getCustomNodeTypes(specJson, scene);
+    const customNodeTypes = getCustomNodeTypes(specJson);
 
     setCustomNodeTypes(customNodeTypes);
-  }, [specJson, scene]);
+  }, [specJson]);
 
   return { filters, customNodeTypes, specJson };
 };

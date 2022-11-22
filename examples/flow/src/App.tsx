@@ -6,13 +6,13 @@ import Controls from './flowEditor/components/Controls';
 import useBehaveGraphFlow from './hooks/useBehaveGraphFlow';
 import GltfLoader from './scene/GltfLoader';
 
-import '@rainbow-me/rainbowkit/styles.css';
 import './styles/resizer.css';
 import useSetAndLoadModelFile from './hooks/useSetAndLoadModelFile';
 import useSceneModifier from './scene/useSceneModifier';
 import useNodeSpecJson from './hooks/useNodeSpecJson';
 import { useEngine } from './hooks/useEngine';
 import SplitEditor from './flowEditor/components/SplitEditor';
+import LoadAndSaveModelControls from './flowEditor/components/LoadAndSaveModelControls';
 
 function App() {
 
@@ -34,24 +34,28 @@ function App() {
     eventEmitter: lifecyleEmitter,
   });
 
-  const controls = specJson && (
+  const loadAndSaveControls = <LoadAndSaveModelControls
+      graphJson={graphJson}
+      handleGraphJsonLoaded={handleGraphJsonLoaded}
+      setModelFile={setModelFile}
+  />
+
+
+  const controls = (
     <Controls
       toggleRun={togglePlay}
-      graphJson={graphJson}
       running={playing}
-      setModelFile={setModelFile}
-      handleGraphJsonLoaded={handleGraphJsonLoaded}
+      additionalControls={loadAndSaveControls}
     />
   );
 
-  const flowEditor = controls && scene && (
+  const flowEditor = specJson && (
     <FlowEditor
         nodes={nodes}
         onNodesChange={onNodesChange}
         edges={edges}
         onEdgesChange={onEdgesChange}
         specJson={specJson}
-        scene={scene}
         controls={controls}
       />
     )

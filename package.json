@@ -68,8 +68,7 @@
   ],
   "preconstruct": {
     "packages": [
-      "packages/core",
-      "packages/three"
+      "packages/*"
     ]
   }
 }

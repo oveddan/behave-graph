@@ -13,11 +13,10 @@ import ReactFlow, {
 import { v4 as uuidv4 } from 'uuid';
 import NodePicker from './components/NodePicker';
 import { calculateNewEdge } from './util/calculateNewEdge';
-import { NodeSpecJSON, Registry } from '@behave-graph/core';
+import { NodeSpecJSON } from '@behave-graph/core';
 import 'reactflow/dist/style.css';
 import './flowEditor.css';
 import useFlowConfigFromRegistry from './hooks/useFlowConfigFromRegistry';
-import { ISceneWithQueries } from '../abstractions';
 
 function Flow({
   nodes,
@@ -25,7 +24,6 @@ function Flow({
   edges,
   onEdgesChange,
   specJson,
-  scene,
   controls,
 }: {
   nodes: Node<any>[];
@@ -33,7 +31,6 @@ function Flow({
   edges: Edge<any>[];
   onEdgesChange: OnEdgesChange;
   specJson: NodeSpecJSON[];
-  scene: ISceneWithQueries;
   controls: JSX.Element;
 }) {
   const [nodePickerVisibility, setNodePickerVisibility] = useState<XYPosition>();
@@ -43,7 +40,6 @@ function Flow({
     nodes,
     lastConnectStart,
     specJson,
-    scene,
   });
 
   const onConnect = useCallback(

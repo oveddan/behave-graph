@@ -6,7 +6,6 @@ import { colors, valueTypeColorMap } from '../util/colors';
 import { InputSocketSpecJSON, NodeSpecJSON } from '@behave-graph/core';
 import { isValidConnection } from '../util/isValidConnection';
 import { AutoSizeInput } from './AutoSizeInput';
-import PathSelect from './PathSelect';
 import { useCallback } from 'react';
 import { ISceneWithQueries } from '../../abstractions';
 
@@ -15,9 +14,7 @@ export type InputSocketProps = {
   value: any | undefined;
   onChange: (key: string, value: any) => void;
   allSpecs: NodeSpecJSON[];
-  shortJsonPath: boolean;
-} & InputSocketSpecJSON &
-  Pick<ISceneWithQueries, 'getProperties'>;
+} & InputSocketSpecJSON;
 
 export default function InputSocket({
   connected,
@@ -27,8 +24,6 @@ export default function InputSocket({
   valueType,
   defaultValue,
   allSpecs,
-  getProperties,
-  shortJsonPath,
 }: InputSocketProps) {
   const instance = useReactFlow();
   const isFlowSocket = valueType === 'flow';
@@ -41,13 +36,6 @@ export default function InputSocket({
   const [backgroundColor, borderColor] = colors[colorName];
 
   const showName = isFlowSocket === false || name !== 'flow';
-
-  const handleSelectChange = useCallback(
-    (value: any) => {
-      onChange(name, value);
-    },
-    [name, onChange]
-  );
 
   const handleTextChange = useCallback(
     (e: any) => {
@@ -64,21 +52,13 @@ export default function InputSocket({
       {isFlowSocket === false && connected === false && (
         <>
           {valueType === 'string' &&
-            (name === 'jsonPath' ? (
-              <PathSelect
-                value={String(value)}
-                onChange={handleSelectChange}
-                getProperties={getProperties}
-                short={shortJsonPath}
-              />
-            ) : (
               <AutoSizeInput
                 type="text"
                 className=" bg-gray-600 disabled:bg-gray-700 py-1 px-2 nodrag"
                 value={String(value) ?? defaultValue ?? ''}
                 onChange={handleTextChange}
               />
-            ))}
+          }
           {valueType === 'number' && (
             <AutoSizeInput
               type="number"
