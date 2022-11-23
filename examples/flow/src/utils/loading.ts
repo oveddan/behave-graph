@@ -1,9 +1,4 @@
 import { GraphJSON } from '@behave-graph/core';
-import { ObjectMap } from '@react-three/fiber';
-import { useCallback, useEffect, useState } from 'react';
-import { GLTF } from 'three-stdlib';
-
-import { examplePairs } from '../components/LoadModal';
 
 function readFileContents(file: File) {
   // eslint-disable-next-line promise/avoid-new
@@ -60,47 +55,3 @@ export const fetchModelFile = async (url: string, fileName: string) => {
 
   return file;
 };
-
-const useSetAndLoadModelFile = () => {
-  const [modelFile, setModelFileAndDataUri] = useState<{
-    file: File;
-    dataUri: string;
-  }>();
-
-  const [gltf, setGltf] = useState<(GLTF & ObjectMap) | undefined>();
-
-  const setModelFile = useCallback(async (modelFile: File | undefined) => {
-    if (!modelFile) {
-      setModelFileAndDataUri(undefined);
-      return;
-    }
-    const modelFileDataUrl = (await dataUrlFromFile(modelFile)) as string;
-    setModelFileAndDataUri({ file: modelFile, dataUri: modelFileDataUrl });
-  }, []);
-
-  const setModelFileUrl = useCallback(
-    async (fileUrl: string, fileName: string) => {
-      const modelFile = await fetchModelFile(fileUrl, fileName);
-
-      setModelFile(modelFile);
-    },
-    []
-  );
-
-  useEffect(() => {
-    const [defaultModelFile] = examplePairs[0];
-    const modelFileUrl = publicUrl(`/examples/models/${defaultModelFile}`);
-
-    setModelFileUrl(modelFileUrl, defaultModelFile);
-  }, []);
-
-  return {
-    setModelFileUrl,
-    setModelFile,
-    modelFile,
-    gltf,
-    setGltf
-  };
-};
-
-export default useSetAndLoadModelFile;

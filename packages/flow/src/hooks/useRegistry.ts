@@ -8,7 +8,7 @@ import {
 } from '@behave-graph/core';
 import { useEffect, useState } from 'react';
 
-export const useRegistry = ({
+const useRegistry = ({
   registerProfiles
 }: {
   registerProfiles: (registry: Registry) => void;
@@ -31,3 +31,5 @@ export const useRegistry = ({
 
   return { registry, lifecyleEmitter, logger };
 };
+
+export default useRegistry;

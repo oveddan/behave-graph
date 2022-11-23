@@ -7,7 +7,7 @@ import {
 } from '@behave-graph/core';
 import { useCallback, useEffect, useState } from 'react';
 
-export const useEngine = ({
+const useEngine = ({
   graphJson,
   registry,
   eventEmitter,
@@ -88,3 +88,5 @@ export const useEngine = ({
     pause
   };
 };
+
+export default useEngine;

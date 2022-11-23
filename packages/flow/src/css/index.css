@@ -1,4 +1,4 @@
-/* fixes issue with tailwind resetting flow control buttons */
+ /* fixes issue with tailwind resetting flow control buttons */
 button,
 [type='button'] {
   background-color: #fff;

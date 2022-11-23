@@ -5,10 +5,11 @@ module.exports = {
       {
         bugfixes: true,
         targets: {
-          esmodules: true,
-        },
-      },
+          esmodules: true
+        }
+      }
     ],
-    '@babel/preset-typescript',
+    '@babel/preset-typescript'
   ],
+  babelrcRoots: ['.', 'packages/*']
 };

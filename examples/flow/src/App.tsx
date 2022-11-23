@@ -1,18 +1,16 @@
-import { Suspense } from 'react';
-import FlowEditor from './flowEditor/FlowEditor';
-import { useRegistry } from './hooks/useRegistry';
+import { Suspense, useEffect } from 'react';
+import { Flow, CustomControls, useRegistry, useBehaveGraphFlow, useNodeSpecJson, useEngine} from '@behave-graph/flow';
 import Scene from './scene/Scene';
-import Controls from './flowEditor/components/Controls';
-import useBehaveGraphFlow from './hooks/useBehaveGraphFlow';
 import GltfLoader from './scene/GltfLoader';
 
 import './styles/resizer.css';
 import useSetAndLoadModelFile from './hooks/useSetAndLoadModelFile';
 import useSceneModifier from './scene/useSceneModifier';
-import useNodeSpecJson from './hooks/useNodeSpecJson';
-import { useEngine } from './hooks/useEngine';
-import SplitEditor from './flowEditor/components/SplitEditor';
-import LoadAndSaveModelControls from './flowEditor/components/LoadAndSaveModelControls';
+import SplitEditor from './components/SplitEditor';
+import LoadAndSaveModelControls from './components/LoadAndSaveModelControls';
+
+import 'reactflow/dist/style.css';
+import '@behave-graph/flow/dist/index.css';
 
 function App() {
 
@@ -35,14 +33,13 @@ function App() {
   });
 
   const loadAndSaveControls = <LoadAndSaveModelControls
-      graphJson={graphJson}
-      handleGraphJsonLoaded={handleGraphJsonLoaded}
-      setModelFile={setModelFile}
+    graphJson={graphJson}
+    handleGraphJsonLoaded={handleGraphJsonLoaded}
+    setModelFile={setModelFile}
   />
 
-
   const controls = (
-    <Controls
+    <CustomControls
       toggleRun={togglePlay}
       running={playing}
       additionalControls={loadAndSaveControls}
@@ -50,7 +47,7 @@ function App() {
   );
 
   const flowEditor = specJson && (
-    <FlowEditor
+    <Flow
         nodes={nodes}
         onNodesChange={onNodesChange}
         edges={edges}

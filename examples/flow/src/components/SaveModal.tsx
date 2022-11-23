@@ -1,8 +1,6 @@
-import { GraphJSON, NodeSpecJSON } from '@behave-graph/core';
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
-import { useEdges, useNodes } from 'reactflow';
-import { flowToBehave } from '../transformers/flowToBehave';
-import { Modal } from './Modal';
+import { GraphJSON  } from '@behave-graph/core';
+import { FC, useEffect, useRef, useState } from 'react';
+import { Modal } from '@behave-graph/flow';
 
 export type SaveModalProps = { open?: boolean; onClose: () => void; graphJson: GraphJSON|undefined };
 

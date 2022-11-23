@@ -24,6 +24,7 @@
     "@babel/preset-typescript": "^7.16.7",
     "@preconstruct/cli": "^2.2.2",
     "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.43.0",
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
@@ -34,14 +35,14 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "ts-node": "^10.9.1",
     "typedoc": "^0.23.15",
-    "typescript": "^4.7.3",
-    "@typescript-eslint/parser": "^5.43.0"
+    "typescript": "^4.7.3"
   },
   "scripts": {
     "postinstall": "preconstruct dev",
-    "build": "preconstruct build",
-    "dev": "preconstruct dev",
+    "build": "preconstruct build && npm run build-css",
+    "dev": "preconstruct dev && npm run build-css",
     "watch": "preconstruct watch",
+    "build-css": "yarn workspace @behave-graph/flow css",
     "lint": "npx eslint \"examples/**/*.{ts,json}\" \"packages/**/*.{ts,json}\"",
     "lint:fix": "npm run lint -- --fix",
     "prettier": "npx prettier \"examples/**/*.{ts,json}\" \"packages/**/*.{ts,json}\" --check",
@@ -59,8 +60,7 @@
     "build-three-viewer": "npm run build && npm run build --workspace=@behave-graph/examples-three-viewer"
   },
   "workspaces": [
-    "packages/core",
-    "packages/three",
+    "packages/*",
     "examples/three-viewer",
     "examples/exec-graph",
     "examples/export-node-spec",

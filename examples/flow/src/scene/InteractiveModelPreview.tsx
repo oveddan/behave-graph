@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import { GraphJSON } from '@behave-graph/core';
 import { useGLTF } from '@react-three/drei';
 import Scene from './Scene';
-import { dataUrlFromFile } from '../hooks/useBehaveGraphFlow';
-import { useEngine } from '../hooks/useEngine';
+import { useEngine, useRegistry } from '@behave-graph/flow';
 import useSceneModifier from './useSceneModifier';
-import { useRegistry } from '../hooks/useRegistry';
+import { dataUrlFromFile } from '../hooks/useSetAndLoadModelFile';
 
 const Inner = ({ fileDataUrl, graphJson }: { fileDataUrl: string; graphJson: GraphJSON }) => {
   const gltf = useGLTF(fileDataUrl);

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { dataUrlFromFile } from '../hooks/useBehaveGraphFlow';
 import { useGLTF } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stage, useCursor } from '@react-three/drei';
 import { Object3D } from 'three';
+import { dataUrlFromFile } from '../hooks/useSetAndLoadModelFile';
 
 const ModelPreviewInner = ({ fileUrl }: { fileUrl: string }) => {
   const gltf = useGLTF(fileUrl);

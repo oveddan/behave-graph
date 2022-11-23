@@ -1,11 +1,11 @@
 import { GraphJSON } from '@behave-graph/core';
 import { FC, useState, useEffect, useCallback, useMemo, CSSProperties } from 'react';
 import { useReactFlow } from 'reactflow';
-import { Modal } from './Modal';
+import { Modal } from '@behave-graph/flow';
 import { useDropzone } from 'react-dropzone';
 
-import { emptyGraphJson, fetchModelFile, publicUrl } from '../../hooks/useBehaveGraphFlow';
-import ModelPreview from '../../scene/ModelPreview';
+import ModelPreview from '../scene/ModelPreview';
+import { fetchModelFile, publicUrl } from '../hooks/useSetAndLoadModelFile';
 
 const modelFiles = {
   courtyard: 'CourtYard.glb',
@@ -109,6 +109,8 @@ const useDropZoneStyle = ({
 
   return style;
 };
+
+const emptyGraphJson = (): GraphJSON => ({})
 
 export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose, handleGraphJsonLoaded, setModelFile}) => {
   const [behaviorGraphString, setBehaviorGraphString] = useState<string>();

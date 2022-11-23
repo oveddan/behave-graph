@@ -1,4 +1,4 @@
-import { MouseEvent as ReactMouseEvent, useCallback, useMemo, useState } from 'react';
+import { MouseEvent as ReactMouseEvent, useCallback, useState } from 'react';
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -11,12 +11,12 @@ import ReactFlow, {
   Edge,
 } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
-import NodePicker from './components/NodePicker';
-import { calculateNewEdge } from './util/calculateNewEdge';
+import NodePicker from './NodePicker';
+import { calculateNewEdge } from '../util/calculateNewEdge';
 import { NodeSpecJSON } from '@behave-graph/core';
-import 'reactflow/dist/style.css';
-import './flowEditor.css';
-import useFlowConfigFromRegistry from './hooks/useFlowConfigFromRegistry';
+// import 'reactflow/dist/style.css';
+// import 'flowEditor.css';
+import useFlowConfigFromRegistry from '../hooks/useFlowConfigFromRegistry';
 
 function Flow({
   nodes,

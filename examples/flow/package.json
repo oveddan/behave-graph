@@ -10,11 +10,10 @@
   },
   "dependencies": {
     "@behave-graph/core": "*",
-    "@fortawesome/fontawesome-svg-core": "^6.2.0",
+    "@behave-graph/flow": "*",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.7.4",
-    "@heroicons/react": "^2.0.13",
     "@react-three/drei": "^9.42.2",
     "@react-three/fiber": "^8.9.1",
     "clsx": "^1.2.1",
@@ -25,14 +24,12 @@
     "react-router-dom": "^6.4.3",
     "react-split-pane": "^0.1.92",
     "reactflow": "^11.2.0",
-    "three": "^0.146.0",
-    "uuid": "^9.0.0"
+    "three": "^0.146.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "@types/three": "^0.146.0",
-    "@types/uuid": "^8.3.4",
     "@typescript-eslint/parser": "^5.42.0",
     "@vitejs/plugin-react": "^2.2.0",
     "autoprefixer": "^10.4.13",
