@@ -1,5 +1,5 @@
 {
-  "name": "@behave-graph/examples-exec-graph",
+  "name": "@oveddan-behave-graph/examples-exec-graph",
   "version": "0.0.1",
   "source": "src/index.ts",
   "type": "module",
@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@behave-graph/core": "*",
+    "@oveddan-behave-graph/core": "*",
     "commander": "^9.4.1",
     "glob": "^8.0.3"
   }

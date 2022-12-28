@@ -1,6 +1,6 @@
 **Graph Execution**
 
-The types of nodes in behave-graph mimic those found in Unreal Engine Blueprints and Unity Visual Scripting.
+The types of nodes in oveddan-behave-graph mimic those found in Unreal Engine Blueprints and Unity Visual Scripting.
 
 The different node types have different execution models and are also declared differently.  The main two categories of nodes are "flow" nodes, that are nodes who are activate participants in the control flow of the behavior graph, and function nodes, who are evaluated on demand when their results are required by "flow" nodes.
 

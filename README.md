@@ -1,8 +1,8 @@
-# Behave-Graph
+# oveddan-behave-graph
 
-[![GitHub license](https://img.shields.io/npm/l/behave-graph)](https://github.com/bhouston/behave-graph/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/@behave-graph/core)](https://www.npmjs.com/package/@behave-graph/core)
+[![GitHub license](https://img.shields.io/npm/l/oveddan-behave-graph)](https://github.com/oveddan/behave-graph/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/@oveddan-behave-graph/core)](https://www.npmjs.com/package/@oveddan-behave-graph/core)
 
-Behave-Graph is a standalone library that implements the concept of "behavior graphs" as a portable TypeScript library with no required external run-time dependencies. Behavior graphs are expressive, deterministic, and extensible state machines that can encode arbitrarily complex behavior.
+oveddan-behave-graph is a standalone library that implements the concept of "behavior graphs" as a portable TypeScript library with no required external run-time dependencies. Behavior graphs are expressive, deterministic, and extensible state machines that can encode arbitrarily complex behavior.
 
 Behavior graphs are used extensively in game development as a visual scripting language. For example, look at Unreal Engine Blueprints or Unity's Visual Scripting or NVIDIA Omniverse's OmniGraph behavior graphs.
 
@@ -22,7 +22,7 @@ You can join our Discord here:
 
 <https://discord.gg/mrags8WyuH>
 
-@beeglebug has started an amazing interactive React node graph editor for behave-graph here:
+@beeglebug has started an amazing interactive React node graph editor for oveddan-behave-graph here:
 
 <https://github.com/beeglebug/behave-flow>
 
@@ -138,7 +138,7 @@ Console output:
 
 ### Asynchronous Execution
 
-Behave-Graph support asynchronous nodes. These are nodes which will continue execution non-immediately but on their own self-determined schedule. This allows for things such as "Delay" nodes that can sleep for a period of time.
+oveddan-behave-graph support asynchronous nodes. These are nodes which will continue execution non-immediately but on their own self-determined schedule. This allows for things such as "Delay" nodes that can sleep for a period of time.
 
 [/graphs/core/async/Delay.json](/graphs/core/async/Delay.json)
 
@@ -153,7 +153,7 @@ One Second Later!
 
 ### For Loops
 
-Building upon waiting for downstream nodes to execute, you can also execute For Loops within Behave-Graph.
+Building upon waiting for downstream nodes to execute, you can also execute For Loops within oveddan-behave-graph.
 
 [/graphs/core/flow/ForLoop.json](/graphs/core/flow/ForLoop.json)
 

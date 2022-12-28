@@ -7,7 +7,7 @@ import {
   Registry,
   validateNodeRegistry,
   writeNodeSpecsToJSON
-} from '@behave-graph/core';
+} from '@oveddan-behave-graph/core';
 import { program } from 'commander';
 import { stringify } from 'csv-stringify';
 

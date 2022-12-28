@@ -14,7 +14,7 @@ import {
   validateGraph,
   validateRegistry,
   writeGraphToJSON
-} from '@behave-graph/core';
+} from '@oveddan-behave-graph/core';
 import { program } from 'commander';
 
 type ProgramOptions = {

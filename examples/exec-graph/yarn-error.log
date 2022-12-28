@@ -14,7 +14,7 @@ Platform:
   darwin arm64
 
 Trace: 
-  SyntaxError: /Users/bhouston/Work/behave-graph/examples/exec-graph/package.json: Unexpected token } in JSON at position 420
+  SyntaxError: /Users/bhouston/Work/oveddan-behave-graph/examples/exec-graph/package.json: Unexpected token } in JSON at position 420
       at JSON.parse (<anonymous>)
       at /Users/bhouston/.yarn/lib/cli.js:1629:59
       at Generator.next (<anonymous>)
@@ -23,7 +23,7 @@ Trace:
 
 npm manifest: 
   {
-    "name": "@behave-graph/examples-exec-graph",
+    "name": "@oveddan-behave-graph/examples-exec-graph",
     "version": "0.9.9",
     "source": "src/index.ts",
     "main": "dist/exec-graph.cjs.js",

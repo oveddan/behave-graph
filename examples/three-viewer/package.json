@@ -1,5 +1,5 @@
 {
-  "name": "@behave-graph/examples-three-viewer",
+  "name": "@oveddan-behave-graph/examples-three-viewer",
   "version": "1.0.0",
   "description": "",
   "type": "module",
@@ -7,7 +7,7 @@
     "lib": "src"
   },
   "dependencies": {
-    "@behave-graph/core": "*",
+    "@oveddan-behave-graph/core": "*",
     "three": "^0.145.0"
   },
   "devDependencies": {
