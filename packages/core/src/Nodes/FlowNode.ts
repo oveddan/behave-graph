@@ -76,17 +76,19 @@ export class FlowNodeInstance<TFlowNodeDefinition extends IFlowNodeDefinition>
     this.outputSocketKeys = nodeProps.outputs.map((s) => s.name);
   }
 
-  public triggered(fiber: Fiber, triggeringSocketName: string) {
+  public triggered = (fiber: Fiber, triggeringSocketName: string) => {
     this.state = this.triggeredInner({
       commit: (outFlowName, fiberCompletedListener) =>
         fiber.commit(this, outFlowName, fiberCompletedListener),
       read: this.readInput,
       write: this.writeOutput,
+      graph: this.graph,
       state: this.state,
+      configuration: this.configuration,
       outputSocketKeys: this.outputSocketKeys,
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       triggeringSocketName
     });
-  }
+  };
 }

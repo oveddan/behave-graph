@@ -88,7 +88,7 @@ export class EventNodeInstance<TEventNodeDef extends IEventNodeDefinition>
     this.outputSocketKeys = nodeProps.outputs.map((s) => s.name);
   }
 
-  init(engine: Engine): any {
+  init = (engine: Engine): any => {
     this.state = this.initInner({
       read: this.readInput,
       write: this.writeOutput,
@@ -99,11 +99,12 @@ export class EventNodeInstance<TEventNodeDef extends IEventNodeDefinition>
       configuration: this.configuration,
       graph: this.graph
     });
-  }
+  };
 
   dispose(): void {
     this.disposeInner({
-      state: this.state
+      state: this.state,
+      graph: this.graph
     });
   }
 }

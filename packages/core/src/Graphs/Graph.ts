@@ -3,7 +3,7 @@ import { generateUuid } from '../generateUuid';
 import { Metadata } from '../Metadata';
 import { NodeConfiguration } from '../Nodes/Node';
 import { INode } from '../Nodes/NodeInstance';
-import { Registry } from '../Registry';
+import { IRegistry, Registry } from '../Registry';
 import { Variable } from '../Variables/Variable';
 // Purpose:
 //  - stores the node graph
@@ -12,12 +12,13 @@ export interface IGraphApi {
   readonly variables: { [id: string]: Variable };
   readonly customEvents: { [id: string]: CustomEvent };
   readonly values: Registry['values'];
+  readonly getDependency: <T>(id: string) => T;
 }
 
 export class Graph {
   public name = '';
   // TODO: think about whether I can replace this with an immutable strategy?  Rather than having this mutable?
-  public readonly nodes: { [id: string]: INode & { id: string } } = {};
+  public readonly nodes: { [id: string]: INode } = {};
   // TODO: think about whether I can replace this with an immutable strategy?  Rather than having this mutable?
   public readonly variables: { [id: string]: Variable } = {};
   // TODO: think about whether I can replace this with an immutable strategy?  Rather than having this mutable?
@@ -25,13 +26,14 @@ export class Graph {
   public metadata: Metadata = {};
   public version = 0;
 
-  constructor(public readonly registry: Registry) {}
+  constructor(public readonly registry: IRegistry) {}
 
   makeApi(): IGraphApi {
     return {
       variables: this.variables,
       customEvents: this.customEvents,
-      values: this.registry.values
+      values: this.registry.values,
+      getDependency: (id: string) => this.registry.dependencies.get(id)
     };
   }
 
@@ -59,10 +61,10 @@ export class Graph {
     const graph = this.makeApi();
     const node = nodeDefinition.nodeFactory(graph, nodeConfiguration);
 
-    this.nodes[nodeId] = {
-      ...node,
-      id: nodeId
-    };
+    node.id = nodeId;
+
+    this.nodes[nodeId] = node;
+
     node.inputs.forEach((socket) => {
       if (socket.valueTypeName !== 'flow' && socket.value === undefined) {
         socket.value = this.registry.values.get(socket.valueTypeName).creator();
