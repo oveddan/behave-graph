@@ -4,6 +4,7 @@ import {
   NodeCategory
 } from '../../../Nodes/NodeDefinitions';
 import { IScene } from '../Abstractions/IScene';
+import { getSceneDependencey } from '../dependencies';
 
 type State = {
   jsonPath?: string | undefined;
@@ -16,8 +17,16 @@ const initialState = (): State => ({});
 export const OnSceneNodeClick = makeEventNodeDefinition({
   typeName: 'scene/nodeClick',
   category: NodeCategory.Event,
+  label: 'On Scene Node Click',
   in: {
-    jsonPath: 'string'
+    jsonPath: (_, graphApi) => {
+      const scene = getSceneDependencey(graphApi.getDependency);
+
+      return {
+        valueType: 'string',
+        choices: scene.getRaycastableProperties()
+      };
+    }
   },
   out: {
     flow: 'flow'
@@ -30,7 +39,7 @@ export const OnSceneNodeClick = makeEventNodeDefinition({
 
     const jsonPath = read<string>('jsonPath');
 
-    const scene = getDependency<IScene>('scene');
+    const scene = getSceneDependencey(getDependency);
     scene.addOnClickedListener(jsonPath, handleNodeClick);
 
     const state: State = {

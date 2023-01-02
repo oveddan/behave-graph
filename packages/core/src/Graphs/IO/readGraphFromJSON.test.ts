@@ -24,7 +24,7 @@ describe('readGraphFromJSON', () => {
         }
       ]
     };
-    expect(() => readGraphFromJSON(json, registry)).toThrow();
+    expect(() => readGraphFromJSON({ graphJson: json, registry })).toThrow();
   });
 
   it("throws if input keys don't match known sockets", () => {
@@ -41,7 +41,7 @@ describe('readGraphFromJSON', () => {
         }
       ]
     };
-    expect(() => readGraphFromJSON(json, registry)).toThrow();
+    expect(() => readGraphFromJSON({ graphJson: json, registry })).toThrow();
   });
 
   it('throws if input points to non-existent node', () => {
@@ -65,7 +65,7 @@ describe('readGraphFromJSON', () => {
         }
       ]
     };
-    expect(() => readGraphFromJSON(json, registry)).toThrow();
+    expect(() => readGraphFromJSON({ graphJson: json, registry })).toThrow();
   });
 
   it('throws if input points to non-existent socket', () => {
@@ -89,6 +89,6 @@ describe('readGraphFromJSON', () => {
         }
       ]
     };
-    expect(() => readGraphFromJSON(json, registry)).toThrow();
+    expect(() => readGraphFromJSON({ graphJson: json, registry })).toThrow();
   });
 });

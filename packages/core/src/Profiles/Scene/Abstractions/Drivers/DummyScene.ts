@@ -49,4 +49,16 @@ export class DummyScene implements IScene {
   ): void {
     console.log('removed on clicked listener');
   }
+
+  getQueryableProperties() {
+    return [];
+  }
+
+  getRaycastableProperties() {
+    return [];
+  }
+
+  getProperties() {
+    return [];
+  }
 }
