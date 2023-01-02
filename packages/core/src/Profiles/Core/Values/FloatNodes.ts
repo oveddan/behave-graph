@@ -1,4 +1,5 @@
-import { makeInNOutFunctionDesc } from '../../../Nodes/FunctionNode';
+import { makeInNOutFunctionDesc } from '@/Nodes/FunctionNode';
+
 import {
   degreesToRadians,
   equalsTolerance,

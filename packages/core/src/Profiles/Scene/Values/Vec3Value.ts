@@ -1,4 +1,5 @@
-import { ValueType } from '../../../Values/ValueType';
+import { ValueType } from '@/Values/ValueType';
+
 import { Vec3, Vec3JSON, vec3Mix, vec3Parse } from './Internal/Vec3';
 
 export const Vec3Value = new ValueType(

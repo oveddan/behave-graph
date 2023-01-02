@@ -1,7 +1,7 @@
-import { IGraphApi } from '../../../Graphs/Graph';
-import { EventNode } from '../../../Nodes/EventNode';
-import { NodeDescription } from '../../../Nodes/Registry/NodeDescription';
-import { Socket } from '../../../Sockets/Socket';
+import { IGraphApi } from '@/Graphs/Graph';
+import { EventNode } from '@/Nodes/EventNode';
+import { NodeDescription } from '@/Nodes/Registry/NodeDescription';
+import { Socket } from '@/Sockets/Socket';
 
 // very 3D specific.
 export class OnSceneNodeClick extends EventNode {

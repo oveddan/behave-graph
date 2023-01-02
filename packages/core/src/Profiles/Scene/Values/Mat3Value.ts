@@ -1,4 +1,5 @@
-import { ValueType } from '../../../Values/ValueType';
+import { ValueType } from '@/Values/ValueType';
+
 import { Mat3, Mat3JSON, mat3Mix, mat3Parse } from './Internal/Mat3';
 
 export const Mat3Value = new ValueType(

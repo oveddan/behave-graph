@@ -1,11 +1,11 @@
-import { Engine } from '../../../Execution/Engine';
-import { IGraphApi } from '../../../Graphs/Graph';
-import { AsyncNode } from '../../../Nodes/AsyncNode';
+import { Engine } from '@/Execution/Engine';
+import { IGraphApi } from '@/Graphs/Graph';
+import { AsyncNode } from '@/Nodes/AsyncNode';
 import {
   NodeDescription,
   NodeDescription2
-} from '../../../Nodes/Registry/NodeDescription';
-import { Socket } from '../../../Sockets/Socket';
+} from '@/Nodes/Registry/NodeDescription';
+import { Socket } from '@/Sockets/Socket';
 
 // ASYNC - asynchronous evaluation
 // also called "delay"

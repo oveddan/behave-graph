@@ -1,5 +1,6 @@
-import { parseSafeFloats, toSafeString } from '../../../../parseFloats';
-import { EPSILON, equalsTolerance } from '../../../Core/Values/Internal/Common';
+import { EPSILON, equalsTolerance } from '@/Profiles/Core/Values/Internal/Common';
+import { parseSafeFloats, toSafeString } from '@/parseFloats';
+
 import { Mat4 } from './Mat4';
 import { Vec2 } from './Vec2';
 import { Vec3 } from './Vec3';

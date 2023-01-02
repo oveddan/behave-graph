@@ -1,4 +1,4 @@
-import { EventEmitter } from '../../../../Events/EventEmitter';
+import { EventEmitter } from '@/Events/EventEmitter';
 import { ILifecycleEventEmitter } from '../ILifecycleEventEmitter';
 
 export class ManualLifecycleEventEmitter implements ILifecycleEventEmitter {

@@ -1,7 +1,4 @@
-import {
-  makeFlowNodeDefinition,
-  NodeCategory
-} from '../../../Nodes/NodeDefinitions';
+import { makeFlowNodeDefinition, NodeCategory } from '@/Nodes/NodeDefinitions';
 
 // based on Unreal Engine Blueprint DoN node
 

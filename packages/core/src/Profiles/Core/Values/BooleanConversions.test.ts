@@ -1,4 +1,5 @@
-import { testExec } from '../../../Nodes/testUtils';
+import { testExec } from '@/Nodes/testUtils';
+
 import { toInteger } from './BooleanNodes';
 import { toBoolean as intToBoolean } from './IntegerNodes';
 

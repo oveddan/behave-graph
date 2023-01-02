@@ -1,9 +1,10 @@
-import { Fiber } from '../../../Execution/Fiber';
-import { IGraphApi } from '../../../Graphs/Graph';
-import { FlowNode } from '../../../Nodes/FlowNode';
-import { NodeDescription } from '../../../Nodes/Registry/NodeDescription';
-import { Socket } from '../../../Sockets/Socket';
-import { toCamelCase } from '../../../toCamelCase';
+import { Fiber } from '@/Execution/Fiber';
+import { IGraphApi } from '@/Graphs/Graph';
+import { FlowNode } from '@/Nodes/FlowNode';
+import { NodeDescription } from '@/Nodes/Registry/NodeDescription';
+import { Socket } from '@/Sockets/Socket';
+import { toCamelCase } from '@/toCamelCase';
+
 import { IScene } from '../Abstractions/IScene';
 
 export class SetSceneProperty extends FlowNode {

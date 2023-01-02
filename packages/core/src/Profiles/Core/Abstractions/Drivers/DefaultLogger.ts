@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { Logger } from '../../../../Diagnostics/Logger';
+import { Logger } from '@/Diagnostics/Logger';
 import { ILogger } from '../ILogger';
 
 export class DefaultLogger implements ILogger {

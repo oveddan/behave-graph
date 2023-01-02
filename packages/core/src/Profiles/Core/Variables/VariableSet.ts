@@ -2,8 +2,8 @@ import {
   makeFlowNodeDefinition,
   NodeCategory,
   SocketsList
-} from '../../../Nodes/NodeDefinitions';
-import { Variable } from '../../../Variables/Variable';
+} from '@/Nodes/NodeDefinitions';
+import { Variable } from '@/Variables/Variable';
 
 export const VariableSet = makeFlowNodeDefinition({
   typeName: 'variable/set',

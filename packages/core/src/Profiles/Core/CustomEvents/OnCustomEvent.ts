@@ -1,15 +1,14 @@
-import { NodeConfiguration } from 'packages/core/src/Nodes/Node';
-
-import { Assert } from '../../../Diagnostics/Assert';
-import { CustomEvent } from '../../../Events/CustomEvent';
-import { Engine } from '../../../Execution/Engine';
-import { IGraphApi } from '../../../Graphs/Graph';
-import { EventNode2 } from '../../../Nodes/EventNode';
+import { Assert } from '@/Diagnostics/Assert';
+import { CustomEvent } from '@/Events/CustomEvent';
+import { Engine } from '@/Execution/Engine';
+import { IGraphApi } from '@/Graphs/Graph';
+import { EventNode2 } from '@/Nodes/EventNode';
+import { NodeConfiguration } from '@/Nodes/Node';
 import {
   NodeDescription,
   NodeDescription2
-} from '../../../Nodes/Registry/NodeDescription';
-import { Socket } from '../../../Sockets/Socket';
+} from '@/Nodes/Registry/NodeDescription';
+import { Socket } from '@/Sockets/Socket';
 
 export class OnCustomEvent extends EventNode2 {
   public static Description = new NodeDescription2({

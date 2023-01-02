@@ -1,7 +1,7 @@
 import {
   makeFlowNodeDefinition,
   NodeCategory
-} from '../../../Nodes/NodeDefinitions';
+} from '@/Nodes/NodeDefinitions';
 
 export const FlipFlop = makeFlowNodeDefinition({
   typeName: 'flow/flipFlop',

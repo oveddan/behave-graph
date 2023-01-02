@@ -1,9 +1,10 @@
-import { EventEmitter } from '../../../../Events/EventEmitter';
-import { ValueTypeRegistry } from '../../../../Values/ValueTypeRegistry';
-import { BooleanValue } from '../../../Core/Values/BooleanValue';
-import { FloatValue } from '../../../Core/Values/FloatValue';
-import { IntegerValue } from '../../../Core/Values/IntegerValue';
-import { StringValue } from '../../../Core/Values/StringValue';
+import { BooleanValue } from '@/Profiles/Core/Values/BooleanValue';
+import { FloatValue } from '@/Profiles/Core/Values/FloatValue';
+import { IntegerValue } from '@/Profiles/Core/Values/IntegerValue';
+import { StringValue } from '@/Profiles/Core/Values/StringValue';
+import { EventEmitter } from '@/Events/EventEmitter';
+import { ValueTypeRegistry } from '@/Values/ValueTypeRegistry';
+
 import { ColorValue } from '../../Values/ColorValue';
 import { EulerValue } from '../../Values/EulerValue';
 import { QuatValue } from '../../Values/QuatValue';

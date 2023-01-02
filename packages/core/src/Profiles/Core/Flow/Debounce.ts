@@ -1,8 +1,8 @@
-import { Engine } from '../../../Execution/Engine';
-import { IGraphApi } from '../../../Graphs/Graph';
-import { AsyncNode } from '../../../Nodes/AsyncNode';
-import { NodeDescription } from '../../../Nodes/Registry/NodeDescription';
-import { Socket } from '../../../Sockets/Socket';
+import { Engine } from '@/Execution/Engine';
+import { IGraphApi } from '@/Graphs/Graph';
+import { AsyncNode } from '@/Nodes/AsyncNode';
+import { NodeDescription } from '@/Nodes/Registry/NodeDescription';
+import { Socket } from '@/Sockets/Socket';
 
 // as long as this continues to be triggered within the duration period, it will not fire.
 // based lousy on https://www.npmjs.com/package/debounce

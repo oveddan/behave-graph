@@ -72,7 +72,7 @@ export function writeGraphToJSON(graph: Graph): GraphJSON {
   Object.values(graph.nodes).forEach((node) => {
     const nodeJson: NodeJSON = {
       type: node.description.typeName,
-      id: node.id
+      id: node.id || ''
     };
     if (node.label && node.label.length > 0) {
       nodeJson.label = node.label;

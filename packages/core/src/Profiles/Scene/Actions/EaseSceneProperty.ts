@@ -1,10 +1,11 @@
-import { Easing, EasingFunctions, EasingModes } from '../../../Easing';
-import { Engine } from '../../../Execution/Engine';
-import { IGraphApi } from '../../../Graphs/Graph';
-import { AsyncNode } from '../../../Nodes/AsyncNode';
-import { NodeDescription } from '../../../Nodes/Registry/NodeDescription';
-import { Socket } from '../../../Sockets/Socket';
-import { toCamelCase } from '../../../toCamelCase';
+import { Easing, EasingFunctions, EasingModes } from '@/Easing';
+import { Engine } from '@/Execution/Engine';
+import { IGraphApi } from '@/Graphs/Graph';
+import { AsyncNode } from '@/Nodes/AsyncNode';
+import { NodeDescription } from '@/Nodes/Registry/NodeDescription';
+import { Socket } from '@/Sockets/Socket';
+import { toCamelCase } from '@/toCamelCase';
+
 import { ILifecycleEventEmitter } from '../../Core/Abstractions/ILifecycleEventEmitter';
 import { IScene } from '../Abstractions/IScene';
 

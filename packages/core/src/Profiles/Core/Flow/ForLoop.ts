@@ -1,7 +1,4 @@
-import {
-  makeFlowNodeDefinition,
-  NodeCategory
-} from '../../../Nodes/NodeDefinitions';
+import { makeFlowNodeDefinition, NodeCategory } from '@/Nodes/NodeDefinitions';
 
 export const ForLoop = makeFlowNodeDefinition({
   typeName: 'flow/forLoop',

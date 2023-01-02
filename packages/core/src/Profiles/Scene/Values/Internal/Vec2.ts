@@ -1,5 +1,5 @@
-import { parseSafeFloats, toSafeString } from '../../../../parseFloats';
-import { EPSILON, equalsTolerance } from '../../../Core/Values/Internal/Common';
+import { EPSILON, equalsTolerance } from '@/Profiles/Core/Values/Internal/Common';
+import { parseSafeFloats, toSafeString } from '@/parseFloats';
 
 export type Vec2JSON = number[];
 

@@ -1,9 +1,9 @@
-import { Assert } from '../../../Diagnostics/Assert';
-import { Engine } from '../../../Execution/Engine';
-import { IGraphApi } from '../../../Graphs/Graph';
-import { AsyncNode } from '../../../Nodes/AsyncNode';
-import { NodeDescription } from '../../../Nodes/Registry/NodeDescription';
-import { Socket } from '../../../Sockets/Socket';
+import { Assert } from '@/Diagnostics/Assert';
+import { Engine } from '@/Execution/Engine';
+import { IGraphApi } from '@/Graphs/Graph';
+import { AsyncNode } from '@/Nodes/AsyncNode';
+import { NodeDescription } from '@/Nodes/Registry/NodeDescription';
+import { Socket } from '@/Sockets/Socket';
 
 // based on the description here: https://blog.webdevsimplified.com/2022-03/debounce-vs-throttle/
 

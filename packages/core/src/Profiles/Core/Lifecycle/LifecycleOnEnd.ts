@@ -1,8 +1,6 @@
-import { Assert } from '../../../Diagnostics/Assert';
-import {
-  makeEventNodeDefinition,
-  NodeCategory
-} from '../../../Nodes/NodeDefinitions';
+import { Assert } from '@/Diagnostics/Assert';
+import { makeEventNodeDefinition, NodeCategory } from '@/Nodes/NodeDefinitions';
+
 import { ILifecycleEventEmitter } from '../Abstractions/ILifecycleEventEmitter';
 import { lifecycleEventEmitterDependencyKey } from './LifecycleOnStart';
 
