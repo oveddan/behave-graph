@@ -1,14 +1,14 @@
 import {
   Engine,
-  GraphInstance,
   GraphJSON,
+  GraphNodes,
   ILifecycleEventEmitter,
   readGraphFromJSON,
   Registry
 } from '@behave-graph/core';
 import { useCallback, useEffect, useState } from 'react';
 
-const useEngine = ({
+const useGraphRunner = ({
   graphJson,
   registry,
   eventEmitter,
@@ -38,14 +38,14 @@ const useEngine = ({
   useEffect(() => {
     if (!graphJson || !registry || !run) return;
 
-    let graph: GraphInstance;
+    let graphNodes: GraphNodes;
     try {
-      graph = readGraphFromJSON(graphJson, registry);
+      graphNodes = readGraphFromJSON(graphJson, registry).nodes;
     } catch (e) {
       console.error(e);
       return;
     }
-    const engine = new Engine(graph.nodes);
+    const engine = new Engine(graphNodes);
 
     setEngine(engine);
 
@@ -96,4 +96,4 @@ const useEngine = ({
   };
 };
 
-export default useEngine;
+export default useGraphRunner;

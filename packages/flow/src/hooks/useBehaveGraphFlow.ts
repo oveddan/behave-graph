@@ -1,7 +1,6 @@
 import { GraphJSON, NodeSpecJSON } from '@behave-graph/core';
 import { useCallback, useEffect, useState } from 'react';
 import { useEdgesState, useNodesState } from 'reactflow';
-import { suspend } from 'suspend-react';
 
 import { behaveToFlow } from '../transformers/behaveToFlow';
 import { flowToBehave } from '../transformers/flowToBehave';
@@ -20,17 +19,12 @@ export const fetchBehaviorGraphJson = async (url: string) =>
  * @returns
  */
 export const useBehaveGraphFlow = ({
-  initialGraphJsonUrl,
+  initialGraphJson,
   specJson
 }: {
-  initialGraphJsonUrl: string | undefined;
+  initialGraphJson: GraphJSON;
   specJson: NodeSpecJSON[] | undefined;
 }) => {
-  const initialGraphJson = suspend(async () => {
-    if (!initialGraphJsonUrl) return;
-    return await fetchBehaviorGraphJson(initialGraphJsonUrl);
-  }, [initialGraphJsonUrl]);
-
   const [graphJson, setStoredGraphJson] = useState<GraphJSON | undefined>(
     initialGraphJson
   );

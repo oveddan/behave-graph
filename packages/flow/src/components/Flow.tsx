@@ -1,20 +1,18 @@
-import { FC, MouseEvent as ReactMouseEvent, useCallback, useMemo, useState } from "react";
+import { FC } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
-  OnConnectStartParams,
-  XYPosition,
 } from "reactflow";
 import { GraphJSON } from "@behave-graph/core";
-import { customNodeTypes } from "../util/customNodeTypes";
 import CustomControls from "./Controls";
 import NodePicker from "./NodePicker";
 import { getNodePickerFilters } from "../util/getPickerFilters";
 import { useRegisterCoreProfileAndOthers } from "../hooks/useRegisterCoreProfileAndOthers";
 import { useNodeSpecJson } from "../hooks/useNodeSpecJson";
 import { useBehaveGraphFlow } from "../hooks/useBehaveGraphFlow";
-import useEngine from "../hooks/useEngine";
+import useGraphRunner from "../hooks/useGraphRunner";
 import { useFlowHandlers } from "../hooks/useFlowHandlers";
+import { useCustomNodeTypes } from "../hooks/useFlowConfigFromRegistry";
 
 type FlowProps = {
   graph: GraphJSON
@@ -33,7 +31,7 @@ export const Flow: FC<FlowProps> = ({ graph }) => {
     graphJson,
     setGraphJson
   } = useBehaveGraphFlow({
-    initialGraphJsonUrl: initialBehaviorGraphUrl,
+    initialGraphJson: graph,
     specJson
   });
 
@@ -43,15 +41,19 @@ export const Flow: FC<FlowProps> = ({ graph }) => {
     onNodesChange
   })
 
-  const { togglePlay, playing } = useEngine({
+  const { togglePlay, playing } = useGraphRunner({
     graphJson,
     registry,
     eventEmitter: lifecyleEmitter
   });
 
+  const nodeTypes = useCustomNodeTypes({
+    specJson,
+  });
+
   return (
     <ReactFlow
-      nodeTypes={customNodeTypes}
+      nodeTypes={nodeTypes}
       nodes={nodes}
       edges={edges}
       onNodesChange={onNodesChange}
