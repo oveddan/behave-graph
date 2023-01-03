@@ -4,6 +4,7 @@ import { Metadata } from '../Metadata';
 import { NodeConfiguration } from '../Nodes/Node';
 import { INode } from '../Nodes/NodeInstance';
 import { IRegistry, Registry } from '../Registry';
+import { Socket } from '../Sockets/Socket';
 import { Variable } from '../Variables/Variable';
 // Purpose:
 //  - stores the node graph
@@ -15,62 +16,65 @@ export interface IGraphApi {
   readonly getDependency: <T>(id: string) => T;
 }
 
-export class Graph {
-  public name = '';
-  // TODO: think about whether I can replace this with an immutable strategy?  Rather than having this mutable?
-  public readonly nodes: { [id: string]: INode } = {};
-  // TODO: think about whether I can replace this with an immutable strategy?  Rather than having this mutable?
-  public readonly variables: { [id: string]: Variable } = {};
-  // TODO: think about whether I can replace this with an immutable strategy?  Rather than having this mutable?
-  public readonly customEvents: { [id: string]: CustomEvent } = {};
-  public metadata: Metadata = {};
-  public version = 0;
+export type GraphNodes = { [id: string]: INode };
+export type GraphVariables = { [id: string]: Variable };
+export type GraphCustomEvents = { [id: string]: CustomEvent };
 
-  constructor(public readonly registry: IRegistry) {}
+export type GraphInstance = {
+  name: string;
+  metadata: Metadata;
+  nodes: GraphNodes;
+  customEvents: GraphCustomEvents;
+  variables: GraphVariables;
+};
 
-  makeApi(): IGraphApi {
-    return {
-      variables: this.variables,
-      customEvents: this.customEvents,
-      values: this.registry.values,
-      getDependency: (id: string) => this.registry.dependencies.get(id)
-    };
+export const createNode = ({
+  graph,
+  registry,
+  nodeTypeName,
+  nodeId = generateUuid(),
+  nodeConfiguration = {}
+}: {
+  graph: IGraphApi;
+  registry: Pick<IRegistry, 'nodes' | 'values'>;
+  nodeTypeName: string;
+  nodeId?: string;
+  nodeConfiguration?: NodeConfiguration;
+}) => {
+  let nodeDefinition = undefined;
+  if (registry.nodes.contains(nodeTypeName)) {
+    nodeDefinition = registry.nodes.get(nodeTypeName);
+  }
+  if (nodeDefinition === undefined) {
+    throw new Error(
+      `no registered node descriptions with the typeName ${nodeTypeName}`
+    );
   }
 
-  createNode(
-    nodeTypeName: string,
-    nodeId: string = generateUuid(),
-    nodeConfiguration: NodeConfiguration = {}
-  ): INode {
-    if (nodeId in this.nodes) {
-      throw new Error(
-        `can not create new node of type ${nodeTypeName} with id ${nodeId} as one with that id already exists.`
-      );
+  const node = nodeDefinition.nodeFactory(graph, nodeConfiguration);
+
+  node.id = nodeId;
+
+  node.inputs.forEach((socket: Socket) => {
+    if (socket.valueTypeName !== 'flow' && socket.value === undefined) {
+      socket.value = registry.values.get(socket.valueTypeName).creator();
     }
+  });
 
-    let nodeDefinition = undefined;
-    if (this.registry.nodes.contains(nodeTypeName)) {
-      nodeDefinition = this.registry.nodes.get(nodeTypeName);
-    }
-    if (nodeDefinition === undefined) {
-      throw new Error(
-        `no registered node descriptions with the typeName ${nodeTypeName}`
-      );
-    }
+  return node;
+};
 
-    const graph = this.makeApi();
-    const node = nodeDefinition.nodeFactory(graph, nodeConfiguration);
-
-    node.id = nodeId;
-
-    this.nodes[nodeId] = node;
-
-    node.inputs.forEach((socket) => {
-      if (socket.valueTypeName !== 'flow' && socket.value === undefined) {
-        socket.value = this.registry.values.get(socket.valueTypeName).creator();
-      }
-    });
-
-    return node;
-  }
-}
+export const makeGraphApi = ({
+  variables = {},
+  customEvents = {},
+  registry
+}: {
+  customEvents?: GraphCustomEvents;
+  variables?: GraphVariables;
+  registry: IRegistry;
+}): IGraphApi => ({
+  variables,
+  customEvents,
+  values: registry.values,
+  getDependency: (id: string) => registry.dependencies.get(id)
+});

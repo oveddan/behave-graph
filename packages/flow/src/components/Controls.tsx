@@ -48,7 +48,7 @@ const CustomControls = () => {
     const graphJson = flowToBehave(nodes, edges);
     const graph = readGraphFromJSON(graphJson, registry);
 
-    const engine = new Engine(graph);
+    const engine = new Engine(graph.nodes);
 
 
     if (manualLifecycleEventEmitter.startEvent.listenerCount > 0) {

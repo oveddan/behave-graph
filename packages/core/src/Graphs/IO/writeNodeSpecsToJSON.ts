@@ -1,6 +1,6 @@
 import { NodeCategory } from '../../Nodes/NodeDefinitions';
 import { Registry } from '../../Registry';
-import { Graph } from '../Graph';
+import { createNode, IGraphApi } from '../Graph';
 import {
   InputSocketSpecJSON,
   NodeSpecJSON,
@@ -10,10 +10,17 @@ import {
 export function writeNodeSpecsToJSON(registry: Registry): NodeSpecJSON[] {
   const nodeSpecsJSON: NodeSpecJSON[] = [];
 
-  const graph = new Graph(registry);
+  // const graph = new Graph(registry);
+
+  const graph: IGraphApi = {
+    values: registry.values,
+    customEvents: {},
+    getDependency: (id: string) => registry.dependencies.get(id),
+    variables: {}
+  };
 
   registry.nodes.getAllNames().forEach((nodeTypeName) => {
-    const node = graph.createNode(nodeTypeName);
+    const node = createNode({ graph, registry, nodeTypeName });
 
     const nodeSpecJSON: NodeSpecJSON = {
       type: nodeTypeName,
