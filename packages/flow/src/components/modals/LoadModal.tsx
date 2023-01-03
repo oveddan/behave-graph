@@ -1,5 +1,5 @@
 import { GraphJSON } from "@behave-graph/core";
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { useReactFlow } from "reactflow";
 import { behaveToFlow } from "../../transformers/behaveToFlow";
 import { autoLayout } from "../../util/autoLayout";
@@ -24,15 +24,16 @@ const examples = {
 export type LoadModalProps = {
   open?: boolean;
   onClose: () => void;
+  setBehaviorGraph: (value: GraphJSON) => void;
 };
 
-export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose }) => {
+export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose, setBehaviorGraph }) => {
   const [value, setValue] = useState<string>();
   const [selected, setSelected] = useState("");
 
   const instance = useReactFlow();
 
-  const handleLoad = () => {
+  const handleLoad = useCallback(() => {
     let graph;
     if (value !== undefined) {
       graph = JSON.parse(value) as GraphJSON;
@@ -42,14 +43,7 @@ export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose }) => {
 
     if (graph === undefined) return;
 
-    const [nodes, edges] = behaveToFlow(graph);
-
-    if (hasPositionMetaData(graph) === false) {
-      autoLayout(nodes, edges);
-    }
-
-    instance.setNodes(nodes);
-    instance.setEdges(edges);
+    setBehaviorGraph(graph)
 
     // TODO better way to call fit vew after edges render
     setTimeout(() => {
@@ -57,7 +51,7 @@ export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose }) => {
     }, 100);
 
     handleClose();
-  };
+  }, [setBehaviorGraph, value, instance]);
 
   const handleClose = () => {
     setValue(undefined);

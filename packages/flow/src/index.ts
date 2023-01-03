@@ -14,6 +14,10 @@ export * from './components/OutputSocket';
 
 export * from './hooks/useChangeNodeData';
 export * from './hooks/useOnPressKey';
+export * from './hooks/useEngine';
+export * from './hooks/useBehaveGraphFlow';
+export * from './hooks/useNodeSpecJson';
+export * from './hooks/useRegisterCoreProfileAndOthers';
 
 export * from './transformers/behaveToFlow';
 export * from './transformers/flowToBehave';

@@ -2,123 +2,52 @@ import { FC, MouseEvent as ReactMouseEvent, useCallback, useMemo, useState } fro
 import ReactFlow, {
   Background,
   BackgroundVariant,
-  Connection,
   OnConnectStartParams,
-  useEdgesState,
-  useNodesState,
   XYPosition,
 } from "reactflow";
-import { v4 as uuidv4 } from "uuid";
 import { GraphJSON } from "@behave-graph/core";
-import { behaveToFlow } from "../transformers/behaveToFlow";
-import { calculateNewEdge } from "../util/calculateNewEdge";
 import { customNodeTypes } from "../util/customNodeTypes";
 import CustomControls from "./Controls";
 import NodePicker from "./NodePicker";
 import { getNodePickerFilters } from "../util/getPickerFilters";
+import { useRegisterCoreProfileAndOthers } from "../hooks/useRegisterCoreProfileAndOthers";
+import { useNodeSpecJson } from "../hooks/useNodeSpecJson";
+import { useBehaveGraphFlow } from "../hooks/useBehaveGraphFlow";
+import useEngine from "../hooks/useEngine";
+import { useFlowHandlers } from "../hooks/useFlowHandlers";
 
 type FlowProps = {
   graph: GraphJSON
 }
 
 export const Flow: FC<FlowProps> = ({ graph }) => {
-  const [nodePickerVisibility, setNodePickerVisibility] =
-    useState<XYPosition>();
-  const [lastConnectStart, setLastConnectStart] =
-    useState<OnConnectStartParams>();
+  const { registry, lifecyleEmitter } = useRegisterCoreProfileAndOthers({});
 
-  const [initialNodes, initialEdges] = useMemo(() => behaveToFlow(graph), [graph]);
+  const specJson = useNodeSpecJson(registry);
 
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
-  const [edges, , onEdgesChange] = useEdgesState(initialEdges);
+  const {
+    nodes,
+    edges,
+    onNodesChange,
+    onEdgesChange,
+    graphJson,
+    setGraphJson
+  } = useBehaveGraphFlow({
+    initialGraphJsonUrl: initialBehaviorGraphUrl,
+    specJson
+  });
 
-  const onConnect = useCallback(
-    (connection: Connection) => {
-      if (connection.source === null) return;
-      if (connection.target === null) return;
+  const { onConnect, handleStartConnect, handleStopConnect, handlePaneClick, handlePaneContextMenu, nodePickerVisibility, handleAddNode, lastConnectStart, closeNodePicker } = useFlowHandlers({
+    nodes,
+    onEdgesChange,
+    onNodesChange
+  })
 
-      const newEdge = {
-        id: uuidv4(),
-        source: connection.source,
-        target: connection.target,
-        sourceHandle: connection.sourceHandle,
-        targetHandle: connection.targetHandle,
-      };
-      onEdgesChange([
-        {
-          type: "add",
-          item: newEdge,
-        },
-      ]);
-    },
-    [onEdgesChange]
-  );
-
-  const handleAddNode = useCallback(
-    (nodeType: string, position: XYPosition) => {
-      closeNodePicker();
-      const newNode = {
-        id: uuidv4(),
-        type: nodeType,
-        position,
-        data: {},
-      };
-      onNodesChange([
-        {
-          type: "add",
-          item: newNode,
-        },
-      ]);
-
-      if (lastConnectStart === undefined) return;
-
-      // add an edge if we started on a socket
-      const originNode = nodes.find(
-        (node) => node.id === lastConnectStart.nodeId
-      );
-      if (originNode === undefined) return;
-      onEdgesChange([
-        {
-          type: "add",
-          item: calculateNewEdge(
-            originNode,
-            nodeType,
-            newNode.id,
-            lastConnectStart
-          ),
-        },
-      ]);
-    },
-    [lastConnectStart, nodes, onEdgesChange, onNodesChange]
-  );
-
-  const handleStartConnect = (
-    e: ReactMouseEvent,
-    params: OnConnectStartParams
-  ) => {
-    setLastConnectStart(params);
-  };
-
-  const handleStopConnect = (e: MouseEvent) => {
-    const element = e.target as HTMLElement;
-    if (element.classList.contains("react-flow__pane")) {
-      setNodePickerVisibility({ x: e.clientX, y: e.clientY });
-    } else {
-      setLastConnectStart(undefined);
-    }
-  };
-
-  const closeNodePicker = () => {
-    setLastConnectStart(undefined);
-    setNodePickerVisibility(undefined);
-  };
-
-  const handlePaneClick = () => closeNodePicker();
-
-  const handlePaneContextMenu = (e: ReactMouseEvent) => {
-    e.preventDefault();
-    setNodePickerVisibility({ x: e.clientX, y: e.clientY });
-  };
+  const { togglePlay, playing } = useEngine({
+    graphJson,
+    registry,
+    eventEmitter: lifecyleEmitter
+  });
 
   return (
     <ReactFlow
@@ -135,7 +64,7 @@ export const Flow: FC<FlowProps> = ({ graph }) => {
       onPaneClick={handlePaneClick}
       onPaneContextMenu={handlePaneContextMenu}
     >
-      <CustomControls />
+      <CustomControls playing={playing} togglePlay={togglePlay} setBehaviorGraph={setGraphJson} />
       <Background
         variant={BackgroundVariant.Lines}
         color="#2a2b2d"
