@@ -13,7 +13,7 @@ export const fetchBehaviorGraphJson = async (url: string) =>
   (await (await fetch(url)).json()) as GraphJSON;
 
 /**
- * Hook that returns the nodes and edges for react-flow, and the graphJson for behave-graph.
+ * Hook that returns the nodes and edges for react-flow, and the graphJson for the behave-graph.
  * If nodes or edges are changes, the graph json is updated automatically.
  * The graph json can be set manually, in which case the nodes and edges are updated to match the graph json.
  * @param param0

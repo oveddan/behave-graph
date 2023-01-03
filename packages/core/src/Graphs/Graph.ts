@@ -67,14 +67,14 @@ export const createNode = ({
 export const makeGraphApi = ({
   variables = {},
   customEvents = {},
-  registry
+  registry: { dependencies, values: valuesRegistry }
 }: {
   customEvents?: GraphCustomEvents;
   variables?: GraphVariables;
-  registry: IRegistry;
+  registry: Pick<IRegistry, 'dependencies' | 'values'>;
 }): IGraphApi => ({
   variables,
   customEvents,
-  values: registry.values,
-  getDependency: (id: string) => registry.dependencies.get(id)
+  values: valuesRegistry,
+  getDependency: (id: string) => dependencies.get(id)
 });
