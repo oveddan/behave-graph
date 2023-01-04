@@ -25,9 +25,7 @@ export const useBehaveGraphFlow = ({
   initialGraphJson: GraphJSON;
   specJson: NodeSpecJSON[] | undefined;
 }) => {
-  const [graphJson, setStoredGraphJson] = useState<GraphJSON | undefined>(
-    initialGraphJson
-  );
+  const [graphJson, setStoredGraphJson] = useState<GraphJSON | undefined>();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
@@ -46,9 +44,14 @@ export const useBehaveGraphFlow = ({
   }, []);
 
   useEffect(() => {
+    if (!initialGraphJson) return;
+    setGraphJson(initialGraphJson);
+  }, [initialGraphJson, setGraphJson]);
+
+  useEffect(() => {
     if (!specJson) return;
     // when nodes and edges are updated, update the graph json with the flow to behave behavior
-    const graphJson = flowToBehave(nodes, edges);
+    const graphJson = flowToBehave(nodes, edges, specJson);
     setStoredGraphJson(graphJson);
   }, [nodes, edges, specJson]);
 

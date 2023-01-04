@@ -47,11 +47,9 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@behave-graph/core": "*",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "behave-graph": "^0.9.9",
     "classnames": "^2.3.1",
     "downshift": "^6.1.7",
     "react": "^18.2.0",
@@ -60,6 +58,9 @@
     "suspend-react": "^0.0.9",
     "typescript": "^4.7.4",
     "uuid": "^8.3.2"
+  },
+  "peerDependencies": {
+    "@behave-graph/core": "*"
   },
   "description": "Simple, extensible behavior graph engine",
   "author": "",

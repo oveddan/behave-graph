@@ -8,6 +8,9 @@ import {
 } from '@behave-graph/core';
 import { useCallback, useEffect, useState } from 'react';
 
+/** Runs the behavior graph by building the execution
+ * engine and triggering start on the lifecycle event emitter.
+ */
 const useGraphRunner = ({
   graphJson,
   registry,

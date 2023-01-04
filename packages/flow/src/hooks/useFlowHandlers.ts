@@ -1,3 +1,4 @@
+import { NodeSpecJSON } from 'packages/core/dist/behave-graph-core.cjs';
 import { MouseEvent as ReactMouseEvent, useCallback, useState } from 'react';
 import { Connection, Node, OnConnectStartParams, XYPosition } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,9 +11,11 @@ type BehaveGraphFlow = ReturnType<typeof useBehaveGraphFlow>;
 export const useFlowHandlers = ({
   onEdgesChange,
   onNodesChange,
-  nodes
+  nodes,
+  specJSON
 }: Pick<BehaveGraphFlow, 'onEdgesChange' | 'onNodesChange'> & {
   nodes: Node[];
+  specJSON: NodeSpecJSON[] | undefined;
 }) => {
   const [lastConnectStart, setLastConnectStart] =
     useState<OnConnectStartParams>();
@@ -64,6 +67,7 @@ export const useFlowHandlers = ({
         (node) => node.id === lastConnectStart.nodeId
       );
       if (originNode === undefined) return;
+      if (!specJSON) return;
       onEdgesChange([
         {
           type: 'add',
@@ -71,12 +75,13 @@ export const useFlowHandlers = ({
             originNode,
             nodeType,
             newNode.id,
-            lastConnectStart
+            lastConnectStart,
+            specJSON
           )
         }
       ]);
     },
-    [lastConnectStart, nodes, onEdgesChange, onNodesChange]
+    [lastConnectStart, nodes, onEdgesChange, onNodesChange, specJSON]
   );
 
   const handleStartConnect = (

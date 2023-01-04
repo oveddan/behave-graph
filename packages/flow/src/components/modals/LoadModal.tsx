@@ -1,37 +1,33 @@
 import { GraphJSON } from "@behave-graph/core";
+import { useEffect } from "react";
 import { FC, useCallback, useState } from "react";
 import { useReactFlow } from "reactflow";
-import { behaveToFlow } from "../../transformers/behaveToFlow";
-import { autoLayout } from "../../util/autoLayout";
-import { hasPositionMetaData } from "../../util/hasPositionMetaData";
 import { Modal } from "./Modal";
 
-import Branch from "behave-graph/dist/graphs/core/flow/Branch.json";
-import Delay from "behave-graph/dist/graphs/core/async/Delay.json";
-import HelloWorld from "behave-graph/dist/graphs/core//HelloWorld.json";
-import Polynomial from "behave-graph/dist/graphs/core/logic/Polynomial.json";
-import SetGet from "behave-graph/dist/graphs/core/variables/SetGet.json";
 
-// TODO remove when json types fixed in behave-graph
-const examples = {
-  branch: Branch as unknown as GraphJSON,
-  delay: Delay as unknown as GraphJSON,
-  helloWorld: HelloWorld as unknown as GraphJSON,
-  polynomial: Polynomial as unknown as GraphJSON,
-  setGet: SetGet as unknown as GraphJSON,
-} as Record<string, GraphJSON>;
+
+export type Examples = {
+  [key: string]: GraphJSON;
+}
 
 export type LoadModalProps = {
   open?: boolean;
   onClose: () => void;
   setBehaviorGraph: (value: GraphJSON) => void;
+  examples: Examples;
 };
 
-export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose, setBehaviorGraph }) => {
+export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose, setBehaviorGraph, examples }) => {
   const [value, setValue] = useState<string>();
   const [selected, setSelected] = useState("");
 
   const instance = useReactFlow();
+
+  useEffect(() => {
+    if (selected) {
+      setValue(JSON.stringify(examples[selected], null, 2));
+    }
+  }, [selected, examples]);
 
   const handleLoad = useCallback(() => {
     let graph;
@@ -85,11 +81,9 @@ export const LoadModal: FC<LoadModalProps> = ({ open = false, onClose, setBehavi
         <option disabled value="">
           Select an example
         </option>
-        <option value="branch">Branch</option>
-        <option value="delay">Delay</option>
-        <option value="helloWorld">Hello World</option>
-        <option value="polynomial">Polynomial</option>
-        <option value="setGet">Set/Get</option>
+        {Object.keys(examples).map(key => (
+          <option key={key} value={key}>{key}</option>
+        ))}
       </select>
     </Modal>
   );

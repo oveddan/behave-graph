@@ -11,25 +11,28 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { LoadModal } from './modals/LoadModal';
+import { Examples, LoadModal } from './modals/LoadModal';
 import { SaveModal } from './modals/SaveModal';
 import { useReactFlow, Controls, ControlButton } from "reactflow";
-import { GraphJSON } from "@behave-graph/core";
+import { GraphJSON, NodeSpecJSON } from "@behave-graph/core";
 
 const CustomControls = ({
   playing,
   togglePlay,
-  setBehaviorGraph
+  setBehaviorGraph,
+  examples,
+  specJson
 }: {
   playing: boolean;
   togglePlay: () => void;
   setBehaviorGraph: (value: GraphJSON) => void;
+  examples: Examples;
+  specJson: NodeSpecJSON[] | undefined;
 }) => {
   const [loadModalOpen, setLoadModalOpen] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
   const [helpModalOpen, setHelpModalOpen] = useState(false);
   const [clearModalOpen, setClearModalOpen] = useState(false);
-  const instance = useReactFlow();
 
   return (
     <>
@@ -50,8 +53,8 @@ const CustomControls = ({
           <FontAwesomeIcon icon={playing ? faPause : faPlay} />
         </ControlButton>
       </Controls>
-      <LoadModal open={loadModalOpen} onClose={() => setLoadModalOpen(false)} setBehaviorGraph={setBehaviorGraph} />
-      <SaveModal open={saveModalOpen} onClose={() => setSaveModalOpen(false)} />
+      <LoadModal open={loadModalOpen} onClose={() => setLoadModalOpen(false)} setBehaviorGraph={setBehaviorGraph} examples={examples} />
+      {specJson && (<SaveModal open={saveModalOpen} specJson={specJson} onClose={() => setSaveModalOpen(false)} />)}
       <HelpModal open={helpModalOpen} onClose={() => setHelpModalOpen(false)} />
       <ClearModal
         open={clearModalOpen}

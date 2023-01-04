@@ -12,13 +12,15 @@ import { useNodeSpecJson } from "../hooks/useNodeSpecJson";
 import { useBehaveGraphFlow } from "../hooks/useBehaveGraphFlow";
 import useGraphRunner from "../hooks/useGraphRunner";
 import { useFlowHandlers } from "../hooks/useFlowHandlers";
-import { useCustomNodeTypes } from "../hooks/useFlowConfigFromRegistry";
+import { Examples } from "./modals/LoadModal";
+import { useCustomNodeTypes } from "../hooks/useCustomNodeTypes";
 
 type FlowProps = {
-  graph: GraphJSON
+  initialGraph: GraphJSON;
+  examples: Examples;
 }
 
-export const Flow: FC<FlowProps> = ({ graph }) => {
+export const Flow: FC<FlowProps> = ({ initialGraph: graph, examples }) => {
   const { registry, lifecyleEmitter } = useRegisterCoreProfileAndOthers({});
 
   const specJson = useNodeSpecJson(registry);
@@ -38,7 +40,8 @@ export const Flow: FC<FlowProps> = ({ graph }) => {
   const { onConnect, handleStartConnect, handleStopConnect, handlePaneClick, handlePaneContextMenu, nodePickerVisibility, handleAddNode, lastConnectStart, closeNodePicker } = useFlowHandlers({
     nodes,
     onEdgesChange,
-    onNodesChange
+    onNodesChange,
+    specJSON: specJson
   })
 
   const { togglePlay, playing } = useGraphRunner({
@@ -66,9 +69,10 @@ export const Flow: FC<FlowProps> = ({ graph }) => {
       onPaneClick={handlePaneClick}
       onPaneContextMenu={handlePaneContextMenu}
     >
-      <CustomControls playing={playing} togglePlay={togglePlay} setBehaviorGraph={setGraphJson} />
+      <CustomControls playing={playing} togglePlay={togglePlay} setBehaviorGraph={setGraphJson} examples={examples} specJson={specJson} />
       <Background
         variant={BackgroundVariant.Lines}
+
         color="#2a2b2d"
         style={{ backgroundColor: "#1E1F22" }}
       />
@@ -78,6 +82,7 @@ export const Flow: FC<FlowProps> = ({ graph }) => {
           filters={getNodePickerFilters(nodes, lastConnectStart)}
           onPickNode={handleAddNode}
           onClose={closeNodePicker}
+          specJSON={specJson}
         />
       )}
     </ReactFlow>
