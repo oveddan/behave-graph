@@ -1,10 +1,10 @@
 {
-  "name": "@behave-graph/flow",
-  "version": "0.9.12",
+  "name": "@oveddan-behave-graph/flow",
+  "version": "0.0.1",
   "source": "src/index.ts",
-  "main": "dist/behave-graph-flow.cjs.js",
-  "module": "dist/behave-graph-flow.esm.js",
-  "types": "dist/behave-graph-flow.cjs.d.ts",
+  "main": "dist/oveddan-behave-graph-flow.cjs.js",
+  "module": "dist/oveddan-behave-graph-flow.esm.js",
+  "types": "dist/oveddan-behave-graph-flow.cjs.d.ts",
   "sideEffects": false,
   "preconstruct": {
     "entrypoints": [
@@ -60,7 +60,10 @@
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
-    "@behave-graph/core": "*"
+    "@oveddan-behave-graph/core": "*"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "description": "Simple, extensible behavior graph engine",
   "author": "",

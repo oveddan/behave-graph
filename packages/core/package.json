@@ -1,6 +1,6 @@
 {
   "name": "@oveddan-behave-graph/core",
-  "version": "0.9.13",
+  "version": "0.0.1",
   "source": "src/index.ts",
   "main": "dist/oveddan-behave-graph-core.cjs.js",
   "module": "dist/oveddan-behave-graph-core.esm.js",
@@ -14,7 +14,7 @@
   "scripts": {
     "watch": "tsc -w",
     "build": "tsc",
-    "test": "jest" 
+    "test": "jest"
   },
   "devDependencies": {
     "@types/glob": "^8.0.0",
@@ -42,5 +42,8 @@
   "license": "ISC",
   "dependencies": {
     "gl-matrix": "^3.4.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

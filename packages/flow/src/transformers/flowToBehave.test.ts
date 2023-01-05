@@ -1,4 +1,4 @@
-import { GraphJSON } from '@behave-graph/core';
+import { GraphJSON } from '@oveddan-behave-graph/core';
 
 import rawFlowGraph from '../../../../graphs/react-flow/graph.json';
 import { behaveToFlow } from './behaveToFlow';

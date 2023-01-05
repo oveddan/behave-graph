@@ -2,6 +2,7 @@
   "name": "@oveddan-behave-graph/examples-three-viewer",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "type": "module",
   "directories": {
     "lib": "src"

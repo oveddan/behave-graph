@@ -8,7 +8,7 @@ import {
   registerLifecycleEventEmitter,
   registerLogger,
   Registry
-} from '@behave-graph/core';
+} from '@oveddan-behave-graph/core';
 import { useEffect, useState } from 'react';
 
 export const useRegisterCoreProfileAndOthers = ({
