@@ -14,6 +14,11 @@ export * from './components/OutputSocket';
 
 export * from './hooks/useChangeNodeData';
 export * from './hooks/useOnPressKey';
+export * from './hooks/useGraphRunner';
+export * from './hooks/useBehaveGraphFlow';
+export * from './hooks/useNodeSpecJson';
+export * from './hooks/useRegisterCoreProfileAndOthers';
+export * from './hooks/useCustomNodeTypes';
 
 export * from './transformers/behaveToFlow';
 export * from './transformers/flowToBehave';
@@ -21,8 +26,6 @@ export * from './transformers/flowToBehave';
 export * from './util/autoLayout';
 export * from './util/calculateNewEdge';
 export * from './util/colors';
-export * from './util/customNodeTypes';
-export * from './util/getNodeSpecJSON';
 export * from './util/getPickerFilters';
 export * from './util/getSocketsByNodeTypeAndHandleType';
 export * from './util/hasPositionMetaData';

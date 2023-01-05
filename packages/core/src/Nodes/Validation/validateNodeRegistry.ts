@@ -1,4 +1,4 @@
-import { Graph } from '../../Graphs/Graph';
+import { createNode, makeGraphApi } from '../../Graphs/Graph';
 import { Registry } from '../../Registry';
 
 const nodeTypeNameRegex = /^\w+(\/\w+)*$/;
@@ -6,9 +6,10 @@ const socketNameRegex = /^\w+$/;
 
 export function validateNodeRegistry(registry: Registry): string[] {
   const errorList: string[] = [];
-  const graph = new Graph(registry);
+  // const graph = new Graph(registry);
+  const graph = makeGraphApi({ registry });
   registry.nodes.getAllNames().forEach((nodeTypeName) => {
-    const node = graph.createNode(nodeTypeName);
+    const node = createNode({ graph, registry, nodeTypeName });
 
     // ensure node is registered correctly.
     if (node.description.typeName !== nodeTypeName) {
