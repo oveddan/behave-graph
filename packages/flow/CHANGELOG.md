@@ -1,5 +1,17 @@
 # @oveddan-behave-graph/flow
 
+## 1.5.0
+
+### Minor Changes
+
+- Auto runtime react
+
+## 1.4.0
+
+### Minor Changes
+
+- Making them peer deps
+
 ## 1.3.0
 
 ### Minor Changes

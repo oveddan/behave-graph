@@ -1,6 +1,6 @@
 {
   "name": "@oveddan-behave-graph/flow",
-  "version": "1.3.0",
+  "version": "1.5.0",
   "source": "src/index.ts",
   "main": "dist/oveddan-behave-graph-flow.cjs.js",
   "module": "dist/oveddan-behave-graph-flow.esm.js",
@@ -52,15 +52,15 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "classnames": "^2.3.1",
     "downshift": "^6.1.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "reactflow": "^11.1.1",
-    "suspend-react": "^0.0.9",
     "typescript": "^4.7.4",
     "uuid": "^8.3.2"
   },
   "peerDependencies": {
-    "@oveddan-behave-graph/core": "*"
+    "@oveddan-behave-graph/core": "*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "reactflow": "^11.1.1",
+    "suspend-react": "^0.0.9"
   },
   "publishConfig": {
     "access": "public"
