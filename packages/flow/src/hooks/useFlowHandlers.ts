@@ -1,4 +1,4 @@
-import { NodeSpecJSON } from 'packages/core/dist/behave-graph-core.cjs';
+import { NodeSpecJSON } from '@oveddan-behave-graph/core';
 import { MouseEvent as ReactMouseEvent, useCallback, useState } from 'react';
 import { Connection, Node, OnConnectStartParams, XYPosition } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';

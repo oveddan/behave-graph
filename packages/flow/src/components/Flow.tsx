@@ -10,7 +10,7 @@ import { getNodePickerFilters } from "../util/getPickerFilters";
 import { useRegisterCoreProfileAndOthers } from "../hooks/useRegisterCoreProfileAndOthers";
 import { useNodeSpecJson } from "../hooks/useNodeSpecJson";
 import { useBehaveGraphFlow } from "../hooks/useBehaveGraphFlow";
-import useGraphRunner from "../hooks/useGraphRunner";
+import { useGraphRunner } from "../hooks/useGraphRunner";
 import { useFlowHandlers } from "../hooks/useFlowHandlers";
 import { Examples } from "./modals/LoadModal";
 import { useCustomNodeTypes } from "../hooks/useCustomNodeTypes";

@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from 'react';
 /** Runs the behavior graph by building the execution
  * engine and triggering start on the lifecycle event emitter.
  */
-const useGraphRunner = ({
+export const useGraphRunner = ({
   graphJson,
   registry,
   eventEmitter,
@@ -98,5 +98,3 @@ const useGraphRunner = ({
     pause
   };
 };
-
-export default useGraphRunner;
