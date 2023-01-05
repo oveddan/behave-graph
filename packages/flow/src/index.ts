@@ -14,6 +14,7 @@ export * from './components/OutputSocket';
 
 export * from './hooks/useChangeNodeData';
 export * from './hooks/useOnPressKey';
+export * from './hooks/useFlowHandlers';
 export * from './hooks/useGraphRunner';
 export * from './hooks/useBehaveGraphFlow';
 export * from './hooks/useNodeSpecJson';

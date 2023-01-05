@@ -4,6 +4,12 @@
 
 ### Minor Changes
 
+- ef3b9b5: Minor version bump
+
+## 0.1.0
+
+### Minor Changes
+
 - testing release
 
 ## 0.1.0

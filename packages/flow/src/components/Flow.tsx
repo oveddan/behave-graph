@@ -37,7 +37,7 @@ export const Flow: FC<FlowProps> = ({ initialGraph: graph, examples }) => {
     specJson
   });
 
-  const { onConnect, handleStartConnect, handleStopConnect, handlePaneClick, handlePaneContextMenu, nodePickerVisibility, handleAddNode, lastConnectStart, closeNodePicker } = useFlowHandlers({
+  const { onConnect, handleStartConnect, handleStopConnect, handlePaneClick, handlePaneContextMenu, nodePickerVisibility, handleAddNode, lastConnectStart, closeNodePicker, nodePickFilters } = useFlowHandlers({
     nodes,
     onEdgesChange,
     onNodesChange,
@@ -79,7 +79,7 @@ export const Flow: FC<FlowProps> = ({ initialGraph: graph, examples }) => {
       {nodePickerVisibility && (
         <NodePicker
           position={nodePickerVisibility}
-          filters={getNodePickerFilters(nodes, lastConnectStart)}
+          filters={nodePickFilters}
           onPickNode={handleAddNode}
           onClose={closeNodePicker}
           specJSON={specJson}

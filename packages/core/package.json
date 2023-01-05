@@ -1,6 +1,6 @@
 {
   "name": "@oveddan-behave-graph/core",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "source": "src/index.ts",
   "main": "dist/oveddan-behave-graph-core.cjs.js",
   "module": "dist/oveddan-behave-graph-core.esm.js",

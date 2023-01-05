@@ -1,9 +1,15 @@
 import { NodeSpecJSON } from '@oveddan-behave-graph/core';
-import { MouseEvent as ReactMouseEvent, useCallback, useState } from 'react';
+import {
+  MouseEvent as ReactMouseEvent,
+  useCallback,
+  useEffect,
+  useState
+} from 'react';
 import { Connection, Node, OnConnectStartParams, XYPosition } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
 
 import { calculateNewEdge } from '../util/calculateNewEdge';
+import { getNodePickerFilters } from '../util/getPickerFilters';
 import { useBehaveGraphFlow } from './useBehaveGraphFlow';
 
 type BehaveGraphFlow = ReturnType<typeof useBehaveGraphFlow>;
@@ -112,6 +118,14 @@ export const useFlowHandlers = ({
     setNodePickerVisibility({ x: e.clientX, y: e.clientY });
   };
 
+  const [nodePickFilters, setNodePickFilters] = useState(
+    getNodePickerFilters(nodes, lastConnectStart)
+  );
+
+  useEffect(() => {
+    setNodePickFilters(getNodePickerFilters(nodes, lastConnectStart));
+  }, [nodes, lastConnectStart]);
+
   return {
     onConnect,
     handleStartConnect,
@@ -121,6 +135,7 @@ export const useFlowHandlers = ({
     lastConnectStart,
     nodePickerVisibility,
     handleAddNode,
-    closeNodePicker
+    closeNodePicker,
+    nodePickFilters
   };
 };
