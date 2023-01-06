@@ -4,8 +4,8 @@ import {
   GraphJSON,
   GraphNodes,
   ILifecycleEventEmitter,
-  readGraphFromJSON,
-  Registry
+  IRegistry,
+  readGraphFromJSON
 } from '@behave-graph/core';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -20,7 +20,7 @@ export const useGraphRunner = ({
   dependencies
 }: {
   graphJson: GraphJSON | undefined;
-  registry: Registry | undefined;
+  registry: IRegistry | undefined;
   eventEmitter: ILifecycleEventEmitter;
   autoRun?: boolean;
   dependencies: Dependencies | undefined;

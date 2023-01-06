@@ -63,9 +63,7 @@ export function registerCoreValueTypes(values: ValueTypeRegistry) {
   values.register(FloatValue);
 }
 
-export function registerCoreProfile(
-  registry: Pick<IRegistry, 'nodes' | 'values'>
-) {
+export function registerCoreProfile(registry: IRegistry) {
   const { nodes, values } = registry;
 
   registerCoreValueTypes(values);

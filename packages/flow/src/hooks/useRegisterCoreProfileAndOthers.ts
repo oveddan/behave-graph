@@ -1,21 +1,25 @@
-import { IRegistry, registerCoreProfile, Registry } from '@behave-graph/core';
+import {
+  createRegistry,
+  IRegistry,
+  registerCoreProfile
+} from '@behave-graph/core';
 import { useEffect, useState } from 'react';
 
 export const useRegisterCoreProfileAndOthers = ({
   otherRegisters
 }: {
-  otherRegisters?: ((registry: Pick<IRegistry, 'nodes' | 'values'>) => void)[];
+  otherRegisters?: ((registry: IRegistry) => void)[];
 }) => {
-  const [registry, setRegistry] = useState<Registry>();
+  const [registry, setRegistry] = useState<IRegistry>();
 
   useEffect(() => {
-    const registry = new Registry();
-    registerCoreProfile(registry);
+    const { nodes, values } = createRegistry();
+    registerCoreProfile({ nodes, values });
     otherRegisters?.forEach((register) => {
-      register(registry);
+      register({ nodes, values });
     });
-    setRegistry(registry);
+    setRegistry({ nodes, values });
   }, [otherRegisters]);
 
-  return { registry };
+  return registry;
 };

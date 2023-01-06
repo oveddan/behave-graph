@@ -4,8 +4,9 @@ import { Metadata } from '../Metadata';
 import { NodeConfiguration } from '../Nodes/Node';
 import { INode } from '../Nodes/NodeInstance';
 import { Dependencies } from '../Nodes/Registry/DependenciesRegistry';
-import { IRegistry, Registry } from '../Registry';
+import { IRegistry } from '../Registry';
 import { Socket } from '../Sockets/Socket';
+import { ValueTypeRegistry } from '../Values/ValueTypeRegistry';
 import { Variable } from '../Variables/Variable';
 // Purpose:
 //  - stores the node graph
@@ -13,7 +14,7 @@ import { Variable } from '../Variables/Variable';
 export interface IGraphApi {
   readonly variables: { [id: string]: Variable };
   readonly customEvents: { [id: string]: CustomEvent };
-  readonly values: Registry['values'];
+  readonly values: ValueTypeRegistry;
   readonly getDependency: <T>(id: string) => T;
 }
 
@@ -31,20 +32,20 @@ export type GraphInstance = {
 
 export const createNode = ({
   graph,
-  registry,
+  registry: { nodes, values },
   nodeTypeName,
   nodeId = generateUuid(),
   nodeConfiguration = {}
 }: {
   graph: IGraphApi;
-  registry: Pick<IRegistry, 'nodes' | 'values'>;
+  registry: IRegistry;
   nodeTypeName: string;
   nodeId?: string;
   nodeConfiguration?: NodeConfiguration;
 }) => {
   let nodeDefinition = undefined;
-  if (registry.nodes.contains(nodeTypeName)) {
-    nodeDefinition = registry.nodes.get(nodeTypeName);
+  if (nodes.contains(nodeTypeName)) {
+    nodeDefinition = nodes.get(nodeTypeName);
   }
   if (nodeDefinition === undefined) {
     throw new Error(
@@ -58,7 +59,7 @@ export const createNode = ({
 
   node.inputs.forEach((socket: Socket) => {
     if (socket.valueTypeName !== 'flow' && socket.value === undefined) {
-      socket.value = registry.values.get(socket.valueTypeName).creator();
+      socket.value = values.get(socket.valueTypeName).creator();
     }
   });
 
@@ -68,16 +69,16 @@ export const createNode = ({
 export const makeGraphApi = ({
   variables = {},
   customEvents = {},
-  registry: { values: valuesRegistry },
+  valuesTypeRegistry,
   dependencies = {}
 }: {
   customEvents?: GraphCustomEvents;
   variables?: GraphVariables;
-  registry: Pick<IRegistry, 'values'>;
+  valuesTypeRegistry: ValueTypeRegistry;
   dependencies: Dependencies;
 }): IGraphApi => ({
   variables,
   customEvents,
-  values: valuesRegistry,
+  values: valuesTypeRegistry,
   getDependency: (id: string) => dependencies[id]
 });

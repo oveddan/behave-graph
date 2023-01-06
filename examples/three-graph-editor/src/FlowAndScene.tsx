@@ -48,7 +48,7 @@ export function Flow() {
     initialFileUrl: initialModelFileUrl
   });
 
-  const { registry } = useRegisterCoreProfileAndOthers({
+  const registry = useRegisterCoreProfileAndOthers({
     otherRegisters:registerProfiles
   });
 
@@ -82,7 +82,7 @@ export function Flow() {
   
   const { togglePlay, playing } = useGraphRunner({
     graphJson,
-    registry,
+    valuesTypeRegistry: registry?.values,
     eventEmitter: coreDependencies.lifecycleEventEmitter,
     dependencies
   });

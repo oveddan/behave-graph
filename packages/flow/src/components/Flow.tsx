@@ -21,7 +21,7 @@ type FlowProps = {
 }
 
 export const Flow: FC<FlowProps> = ({ initialGraph: graph, examples }) => {
-  const { registry } = useRegisterCoreProfileAndOthers({});
+  const registry = useRegisterCoreProfileAndOthers({});
 
   const dependencies = useCoreDependencies();
 

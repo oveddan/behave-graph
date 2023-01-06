@@ -4,7 +4,7 @@ import { Link } from '../../Nodes/Link';
 import { NodeConfiguration } from '../../Nodes/Node';
 import { INode } from '../../Nodes/NodeInstance';
 import { Dependencies } from '../../Nodes/Registry/DependenciesRegistry';
-import { IRegistry, Registry } from '../../Registry';
+import { IRegistry } from '../../Registry';
 import { Socket } from '../../Sockets/Socket';
 import { ValueTypeRegistry } from '../../Values/ValueTypeRegistry';
 import { Variable } from '../../Variables/Variable';
@@ -34,7 +34,7 @@ export function readGraphFromJSON({
   dependencies
 }: {
   graphJson: GraphJSON;
-  registry: Registry;
+  registry: IRegistry;
   dependencies: Dependencies;
 }): GraphInstance {
   const graphName = graphJson?.name || '';
@@ -43,12 +43,17 @@ export function readGraphFromJSON({
   let variables: GraphVariables = {};
   let customEvents: GraphCustomEvents = {};
 
+  const { values: valuesTypeRegistry } = registry;
+
   if ('variables' in graphJson) {
-    variables = readVariablesJSON(registry.values, graphJson.variables ?? []);
+    variables = readVariablesJSON(
+      valuesTypeRegistry,
+      graphJson.variables ?? []
+    );
   }
   if ('customEvents' in graphJson) {
     customEvents = readCustomEventsJSON(
-      registry.values,
+      valuesTypeRegistry,
       graphJson.customEvents ?? []
     );
   }
@@ -60,7 +65,7 @@ export function readGraphFromJSON({
   }
 
   const graphApi = makeGraphApi({
-    registry,
+    valuesTypeRegistry,
     variables,
     customEvents,
     dependencies
@@ -70,7 +75,7 @@ export function readGraphFromJSON({
   // create new BehaviorNode instances for each node in the json.
   for (let i = 0; i < nodesJson.length; i += 1) {
     const nodeJson = nodesJson[i];
-    const node = readNodeJSON(graphApi, registry, nodeJson);
+    const node = readNodeJSON({ graph: graphApi, registry, nodeJson });
 
     if (node.id in nodes) {
       `can not create new node with id ${node.id} as one with that id already exists.`;
@@ -159,11 +164,15 @@ export function readGraphFromJSON({
   };
 }
 
-function readNodeJSON(
-  graph: IGraphApi,
-  registry: Pick<IRegistry, 'nodes' | 'values'>,
-  nodeJson: NodeJSON
-) {
+function readNodeJSON({
+  graph,
+  registry,
+  nodeJson
+}: {
+  graph: IGraphApi;
+  registry: IRegistry;
+  nodeJson: NodeJSON;
+}) {
   if (nodeJson.type === undefined) {
     throw new Error('readGraphFromJSON: no type for node');
   }

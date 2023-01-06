@@ -6,7 +6,7 @@ export interface IRegistry {
   readonly nodes: NodeTypeRegistry;
 }
 
-export class Registry implements IRegistry {
-  public readonly values = new ValueTypeRegistry();
-  public readonly nodes = new NodeTypeRegistry();
-}
+export const createRegistry: () => IRegistry = () => ({
+  values: new ValueTypeRegistry(),
+  nodes: new NodeTypeRegistry()
+});

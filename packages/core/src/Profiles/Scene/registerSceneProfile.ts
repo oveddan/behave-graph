@@ -25,18 +25,9 @@ import { Vec3Value } from './Values/Vec3Value';
 import * as Vec4Nodes from './Values/Vec4Nodes';
 import { Vec4Value } from './Values/Vec4Value';
 
-<<<<<<< HEAD
-export function registerSceneDependency(
-  dependencies: IRegistry['dependencies'],
-  scene: IScene
-) {
-  dependencies.register('scene', scene);
-}
-=======
 export const createSceneDependency = (scene: IScene): Dependencies => ({
   [sceneDepdendencyKey]: scene
 });
->>>>>>> a5e9a60 (Migrated scene based nodes to use dependencies for IScene)
 
 export function registerSceneProfile(
   registry: Pick<IRegistry, 'values' | 'nodes'>
