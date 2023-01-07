@@ -82,7 +82,7 @@ export function Flow() {
   
   const { togglePlay, playing } = useGraphRunner({
     graphJson,
-    valuesTypeRegistry: registry?.values,
+    registry,
     eventEmitter: coreDependencies.lifecycleEventEmitter,
     dependencies
   });

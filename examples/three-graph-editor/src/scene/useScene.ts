@@ -36,7 +36,7 @@ export type Optional<T> = {
 };
 
 export type Path = {
-  resource: ResourceTypes;
+  resource: Resource;
   index: number;
   property: string;
 };
@@ -62,17 +62,17 @@ export function parseJsonPath(jsonPath: string, short = false): Path {
   if (matches.groups === undefined)
     throw new Error(`can not parse jsonPath (no groups): ${jsonPath}`);
   return {
-    resource: matches.groups.resource as ResourceTypes,
+    resource: matches.groups.resource as Resource,
     index: +matches.groups.index,
     property: matches.groups.property
   };
 }
 
-const resources = {
-  nodes: 'nodes',
-  materials: 'materials',
-  animations: 'animations'
-};
+enum Resource {
+  nodes = 'nodes',
+  materials = 'materials',
+  animations = 'animations'
+}
 
 function applyPropertyToModel(
   { resource, index, property }: Path,
@@ -83,7 +83,7 @@ function applyPropertyToModel(
 ) {
   const nodeName = getResourceName({ resource, index }, properties);
   if (!nodeName) throw new Error(`could not get node at index ${index}`);
-  if (resource === resources.nodes) {
+  if (resource === Resource.nodes) {
     const node = gltf.nodes[nodeName] as unknown as Object3D | undefined;
 
     if (!node) {
@@ -95,7 +95,7 @@ function applyPropertyToModel(
 
     return;
   }
-  if (resource === resources.materials) {
+  if (resource === Resource.materials) {
     const node = gltf.materials[nodeName] as unknown as Material | undefined;
 
     if (!node) {
@@ -108,7 +108,7 @@ function applyPropertyToModel(
     return;
   }
 
-  if (resource === resources.animations) {
+  if (resource === Resource.animations) {
     setActiveAnimations(nodeName, value as boolean);
     return;
   }
@@ -128,7 +128,7 @@ const getPropertyFromModel = (
   gltf: GLTF & ObjectMap,
   properties: Properties
 ) => {
-  if (resource === resources.nodes) {
+  if (resource === Resource.nodes) {
     const nodeName = getResourceName({ resource, index }, properties);
     if (!nodeName) throw new Error(`could not get node at index ${index}`);
     const node = gltf.nodes[nodeName] as unknown as Object3D | undefined;
@@ -157,6 +157,7 @@ function applyNodeModifier(property: string, objectRef: Object3D, value: any) {
     }
     case 'scale': {
       const v = value as Vec3;
+      console.log(v.x);
       objectRef.scale.set(v.x, v.y, v.z);
       break;
     }
@@ -216,12 +217,8 @@ export type ResourceProperties = {
   properties: string[];
 };
 
-export type ResourceTypes = 'nodes' | 'materials' | 'animations';
-
 type Properties = {
-  nodes?: ResourceProperties;
-  materials?: ResourceProperties;
-  animations?: ResourceProperties;
+  [key in Resource]?: ResourceProperties;
 };
 
 const extractProperties = (gltf: GLTF): Properties => {
@@ -285,7 +282,7 @@ function createPropertyChoice(
 
 function generateChoicesForProperty(
   property: ResourceProperties | undefined,
-  resource: keyof typeof resources
+  resource: Resource
 ) {
   if (!property) return [];
   const choices: { text: string; value: any }[] = [];
@@ -301,9 +298,9 @@ function generateChoicesForProperty(
 
 function generateSettableChoices(properties: Properties): Choices {
   const choices: { text: string; value: any }[] = [
-    ...generateChoicesForProperty(properties.nodes, 'nodes'),
-    ...generateChoicesForProperty(properties.materials, 'materials'),
-    ...generateChoicesForProperty(properties.animations, 'animations')
+    ...generateChoicesForProperty(properties.nodes, Resource.nodes),
+    ...generateChoicesForProperty(properties.materials, Resource.materials),
+    ...generateChoicesForProperty(properties.animations, Resource.animations)
   ];
 
   return choices;
