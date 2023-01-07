@@ -13,4 +13,6 @@ export interface IScene {
   ): void;
   getRaycastableProperties: () => Choices;
   getProperties: () => Choices;
+  addOnSceneChangedListener(listener: () => void): void;
+  removeOnSceneChangedListener(listener: () => void): void;
 }

@@ -7,5 +7,5 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["./src"]
+  "include": ["./src", "../../packages/core/src/Profiles/Scene/buildScene.ts"]
 }

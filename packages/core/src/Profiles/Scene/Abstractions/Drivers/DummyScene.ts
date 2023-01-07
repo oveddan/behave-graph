@@ -61,4 +61,12 @@ export class DummyScene implements IScene {
   getProperties() {
     return [];
   }
+
+  addOnSceneChangedListener() {
+    console.log('added on scene changed listener');
+  }
+
+  removeOnSceneChangedListener(): void {
+    console.log('removed on scene changed listener');
+  }
 }

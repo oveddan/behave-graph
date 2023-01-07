@@ -61,7 +61,7 @@ export interface INodeDefinition<
 export type SocketNames<TSockets extends SocketsDefinition> =
   TSockets extends SocketsMap ? keyof TSockets : any;
 
-export type Dependencies = any | undefined;
+export type Dependencies = Record<string, any>;
 
 export type TriggeredFn<
   TInput extends SocketsDefinition = SocketsDefinition,
