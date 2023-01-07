@@ -41,31 +41,13 @@ function onWindowResize() {
 }
 
 const publicImageUrl = (path: string) => new URL(path, import.meta.url).href;
-//
-
-// async function loadThreeScene() {
-//   const gltfPromise = new GLTFLoader()
-//     .setPath(publicImageUrl('/graphs/scene/actions/'))
-//     .loadAsync('SpinningSuzanne.gltf');
-
-//   const gltf = await gltfPromise;
-
-//   const glTFJsonPath = publicImageUrl(
-//     '/graphs/scene/actions/SpinningSuzanne.gltf'
-//   );
-
-//   const threeScene = await loadSce(
-//     publicImageUrl(`/graphs/scene/actions/SpinningSuzanne.gltf`)
-//   );
-
-//   return { threeScene, gltf };
-// }
 
 async function main() {
   const registry = createRegistry();
   const manualLifecycleEventEmitter = new ManualLifecycleEventEmitter();
   const logger = new DefaultLogger();
 
+  debugger;
   const { scene: threeScene, gltf } = await loadGltfAndBuildScene(
     '/graphs/scene/actions/SpinningSuzanne.gltf'
   );
