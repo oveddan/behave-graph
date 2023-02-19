@@ -8,8 +8,6 @@ import useSetAndLoadModelFile, {
 import SplitEditor from './SplitEditor';
 import { examplePairs } from './components/LoadModal';
 import {
-  registerSceneProfile,
-  createSceneDependency,
   IRegistry
 } from '@behave-graph/core';
 import { useScene } from './scene/useScene';
@@ -32,7 +30,7 @@ import {
 } from './hooks/useSaveAndLoad';
 import ReactFlow, { Background, BackgroundVariant } from 'reactflow';
 import { useEffect } from 'react';
-import { useWhyDidYouUpdate } from 'use-why-did-you-update';
+import { createSceneDependency, registerSceneProfile } from '@behave-graph/scene';
 
 const [initialModelFile, initialBehaviorGraph] = examplePairs[0];
 

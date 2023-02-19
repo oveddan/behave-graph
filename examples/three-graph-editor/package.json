@@ -8,6 +8,7 @@
   "dependencies": {
     "@behave-graph/core": "*",
     "@behave-graph/flow": "*",
+    "@behave-graph/scene": "*",
     "@headlessui/react": "^1.7.7",
     "@react-three/drei": "^9.51.3",
     "@react-three/fiber": "^8.10.0",
