@@ -105,5 +105,7 @@ export * from './Profiles/Scene/Values/Vec4Value';
 export * as QuatNodes from './Profiles/Scene/Values/QuatNodes';
 export * from './Profiles/Scene/Values/QuatValue';
 export * from './Profiles/Scene/registerSceneProfile';
+export * from './Profiles/Scene/buildScene';
+export * from './Profiles/Scene/loadScene';
 
 export * from './parseFloats';
