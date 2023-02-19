@@ -1,4 +1,8 @@
-import { createRegistry, GraphJSON, writeNodeSpecsToJSON } from '@behave-graph/core';
+import {
+  createRegistry,
+  GraphJSON,
+  writeNodeSpecsToJSON
+} from '@behave-graph/core';
 
 import rawFlowGraph from '../../../../graphs/react-flow/graph.json';
 import { behaveToFlow } from './behaveToFlow';
@@ -10,7 +14,7 @@ const [nodes, edges] = behaveToFlow(flowGraph);
 
 it('transforms from flow to behave', () => {
   const registry = createRegistry();
-  const specJSON = writeNodeSpecsToJSON({registry, dependencies: {}});
+  const specJSON = writeNodeSpecsToJSON({ registry, dependencies: {} });
   const output = flowToBehave(nodes, edges, specJSON);
   expect(output).toEqual(flowGraph);
 });
