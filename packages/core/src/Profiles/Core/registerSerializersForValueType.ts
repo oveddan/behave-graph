@@ -3,7 +3,7 @@ import { IRegistry } from '../../Registry';
 import { toCamelCase } from '../../toCamelCase';
 
 export function registerSerializersForValueType(
-  registry: Pick<IRegistry, 'nodes' | 'values'>,
+  registry: IRegistry,
   valueTypeName: string
 ) {
   const camelCaseValueTypeName = toCamelCase(valueTypeName);

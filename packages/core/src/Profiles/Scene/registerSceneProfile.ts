@@ -1,9 +1,11 @@
 /* eslint-disable max-len */
+import { Dependencies } from '../../Nodes/Registry/DependenciesRegistry';
 import { getNodeDescriptions } from '../../Nodes/Registry/NodeDescription';
 import { IRegistry } from '../../Registry';
 import { registerSerializersForValueType } from '../Core/registerSerializersForValueType';
 import { IScene } from './Abstractions/IScene';
 import { SetSceneProperty } from './Actions/SetSceneProperty';
+import { sceneDepdendencyKey } from './dependencies';
 import { OnSceneNodeClick } from './Events/OnSceneNodeClick';
 import { GetSceneProperty } from './Queries/GetSceneProperty';
 import * as ColorNodes from './Values/ColorNodes';
@@ -23,12 +25,9 @@ import { Vec3Value } from './Values/Vec3Value';
 import * as Vec4Nodes from './Values/Vec4Nodes';
 import { Vec4Value } from './Values/Vec4Value';
 
-export function registerSceneDependency(
-  dependencies: IRegistry['dependencies'],
-  scene: IScene
-) {
-  dependencies.register('scene', scene);
-}
+export const createSceneDependency = (scene: IScene): Dependencies => ({
+  [sceneDepdendencyKey]: scene
+});
 
 export function registerSceneProfile(
   registry: Pick<IRegistry, 'values' | 'nodes'>
