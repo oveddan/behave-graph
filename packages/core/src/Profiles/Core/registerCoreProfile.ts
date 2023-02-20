@@ -1,15 +1,14 @@
 /* eslint-disable max-len */
+
 import { getNodeDescriptions } from '../../Nodes/Registry/NodeDescription';
-import { Registry } from '../../Registry';
+import { IRegistry } from '../../Registry';
 import { ValueTypeRegistry } from '../../Values/ValueTypeRegistry';
-import { DefaultLogger } from './Abstractions/Drivers/DefaultLogger';
-import { ManualLifecycleEventEmitter } from './Abstractions/Drivers/ManualLifecycleEventEmitter';
 import { ILifecycleEventEmitter } from './Abstractions/ILifecycleEventEmitter';
 import { ILogger } from './Abstractions/ILogger';
 import { OnCustomEvent } from './CustomEvents/OnCustomEvent';
 import { TriggerCustomEvent } from './CustomEvents/TriggerCustomEvent';
 import { ExpectTrue as AssertExpectTrue } from './Debug/AssertExpectTrue';
-import { Log as DebugLog } from './Debug/DebugLog';
+import { Log as DebugLog, loggerDependencyKey } from './Debug/DebugLog';
 import { Branch } from './Flow/Branch';
 import { Counter } from './Flow/Counter';
 import { Debounce } from './Flow/Debounce';
@@ -25,7 +24,10 @@ import { SwitchOnString } from './Flow/SwitchOnString';
 import { Throttle } from './Flow/Throttle';
 import { WaitAll } from './Flow/WaitAll';
 import { LifecycleOnEnd } from './Lifecycle/LifecycleOnEnd';
-import { LifecycleOnStart } from './Lifecycle/LifecycleOnStart';
+import {
+  lifecycleEventEmitterDependencyKey,
+  LifecycleOnStart
+} from './Lifecycle/LifecycleOnStart';
 import { LifecycleOnTick } from './Lifecycle/LifecycleOnTick';
 import { Easing } from './Logic/Easing';
 import { registerSerializersForValueType } from '../registerSerializersForValueType';
@@ -42,6 +44,17 @@ import { StringValue } from './Values/StringValue';
 import { VariableGet } from './Variables/VariableGet';
 import { VariableSet } from './Variables/VariableSet';
 
+export const makeCoreDependencies = ({
+  lifecyleEmitter,
+  logger
+}: {
+  lifecyleEmitter: ILifecycleEventEmitter;
+  logger: ILogger;
+}) => ({
+  [lifecycleEventEmitterDependencyKey]: lifecyleEmitter,
+  [loggerDependencyKey]: logger
+});
+
 export function registerCoreValueTypes(values: ValueTypeRegistry) {
   // pull in value type nodes
   values.register(BooleanValue);
@@ -50,11 +63,7 @@ export function registerCoreValueTypes(values: ValueTypeRegistry) {
   values.register(FloatValue);
 }
 
-export function registerCoreProfile(
-  registry: Registry,
-  logger: ILogger = new DefaultLogger(),
-  lifecycleEventEmitter: ILifecycleEventEmitter = new ManualLifecycleEventEmitter()
-) {
+export function registerCoreProfile(registry: IRegistry) {
   const { nodes, values } = registry;
 
   registerCoreValueTypes(values);
@@ -81,14 +90,14 @@ export function registerCoreProfile(
 
   // actions
 
-  nodes.register(DebugLog.Description(logger));
+  nodes.register(DebugLog);
   nodes.register(AssertExpectTrue.Description);
 
   // events
 
-  nodes.register(LifecycleOnStart(lifecycleEventEmitter));
-  nodes.register(LifecycleOnEnd(lifecycleEventEmitter));
-  nodes.register(LifecycleOnTick(lifecycleEventEmitter));
+  nodes.register(LifecycleOnStart);
+  nodes.register(LifecycleOnEnd);
+  nodes.register(LifecycleOnTick);
 
   // time
 

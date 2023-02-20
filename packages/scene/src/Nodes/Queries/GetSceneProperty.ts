@@ -1,44 +1,33 @@
-import {
-  FunctionNode,
-  IGraphApi,
-  NodeDescription,
-  Socket,
-  toCamelCase
-} from '@behave-graph/core';
+import { makeFunctionNodeDefinition, NodeCategory } from '@behave-graph/core';
 
-import { IScene } from '../../Abstractions/IScene';
+import { getSceneDependencey } from '../../dependencies';
 
-export class GetSceneProperty extends FunctionNode {
-  public static GetDescriptions(scene: IScene, ...valueTypeNames: string[]) {
-    return valueTypeNames.map(
-      (valueTypeName) =>
-        new NodeDescription(
-          `scene/get/${valueTypeName}`,
-          'Query',
-          `Get Scene ${toCamelCase(valueTypeName)}`,
-          (description, graph) =>
-            new GetSceneProperty(description, graph, valueTypeName, scene)
-        )
-    );
-  }
+export const GetSceneProperty = (valueTypeNames: string[]) =>
+  valueTypeNames.map((valueTypeName) =>
+    makeFunctionNodeDefinition({
+      typeName: `scene/get/${valueTypeName}`,
+      category: NodeCategory.Query,
+      label: `Scene set ${valueTypeName}`,
+      in: {
+        jsonPath: (_, graphApi) => {
+          const scene = getSceneDependencey(graphApi.getDependency);
 
-  constructor(
-    description: NodeDescription,
-    graph: IGraphApi,
-    public readonly valueTypeName: string,
-    private readonly scene: IScene
-  ) {
-    super(
-      description,
-      graph,
-      [new Socket('string', 'jsonPath')],
-      [new Socket(valueTypeName, 'value')],
-      () => {
-        this.writeOutput(
-          'value',
-          this.scene.getProperty(this.readInput('jsonPath'), valueTypeName)
+          return {
+            valueType: 'string',
+            choices: scene.getProperties()
+          };
+        }
+      },
+      out: {
+        value: valueTypeName
+      },
+      exec: ({ graph: { getDependency }, read, write }) => {
+        const scene = getSceneDependencey(getDependency);
+        const propertyValue = scene.getProperty(
+          read('jsonPath'),
+          valueTypeName
         );
+        write('value', propertyValue);
       }
-    );
-  }
-}
+    })
+  );

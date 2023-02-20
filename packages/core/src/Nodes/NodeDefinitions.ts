@@ -1,4 +1,5 @@
 import { IGraphApi } from '../Graphs/Graph';
+import { Choices } from '../Sockets/Socket';
 import { AsyncNodeInstance } from './AsyncNode';
 import { EventNodeInstance } from './EventNode';
 import { FlowNodeInstance } from './FlowNode';
@@ -12,10 +13,16 @@ import { NodeConfigurationDescription } from './Registry/NodeDescription';
 export interface SocketDefinition {
   valueType: string;
   defaultValue?: any;
-  choices?: string[];
+  choices?: Choices;
   label?: string;
 }
-export type SocketsMap = Record<string, SocketDefinition | string>;
+
+export type SocketsMap = Record<
+  string,
+  | SocketDefinition
+  | string
+  | ((nodeConfig: NodeConfiguration, graph: IGraphApi) => SocketDefinition)
+>;
 export type SocketListDefinition = SocketDefinition & { key: string };
 export type SocketsList = SocketListDefinition[];
 
@@ -35,7 +42,7 @@ export interface IHasNodeFactory {
   readonly nodeFactory: NodeFactory;
 }
 
-export interface INodeDefinitionBase<
+export interface INodeDefinition<
   TInput extends SocketsDefinition = SocketsDefinition,
   TOutput extends SocketsDefinition = SocketsDefinition,
   TConfig extends NodeConfigurationDescription = NodeConfigurationDescription
@@ -51,18 +58,10 @@ export interface INodeDefinitionBase<
   configuration?: TConfig;
 }
 
-export interface INodeDefinition<
-  TInput extends SocketsDefinition,
-  TOutput extends SocketsDefinition,
-  TConfig extends NodeConfigurationDescription
-> extends INodeDefinitionBase<TInput, TOutput, TConfig> {
-  in: TInput;
-  out: TOutput;
-  configuration?: TConfig;
-}
-
 export type SocketNames<TSockets extends SocketsDefinition> =
   TSockets extends SocketsMap ? keyof TSockets : any;
+
+export type Dependencies = Record<string, any>;
 
 export type TriggeredFn<
   TInput extends SocketsDefinition = SocketsDefinition,
@@ -125,7 +124,7 @@ export interface IHasInit<
 }
 
 export interface IHasDispose<TState> {
-  dispose: (params: { state: TState }) => StateReturn<TState>;
+  dispose: (params: { state: TState; graph: IGraphApi }) => StateReturn<TState>;
 }
 
 export interface IFlowNodeDefinition<
@@ -148,7 +147,7 @@ export interface IAsyncNodeDefinition<
     IHasTriggered<TInput, TOutput, TState>,
     IHasDispose<TState> {}
 
-type OmitFactoryAndType<T extends INodeDefinitionBase> = Omit<
+type OmitFactoryAndType<T extends INodeDefinition> = Omit<
   T,
   'nodeFactory' | 'nodeType'
 >;
