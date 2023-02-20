@@ -93,7 +93,6 @@ export const makeCommonProps = (
   configuration: NodeConfiguration,
   graph: IGraphApi
 ): INode => ({
-  id: '',
   description: {
     typeName: typeName,
     configuration: nodeDefinitionConfiguration || {},

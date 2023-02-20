@@ -76,12 +76,15 @@ export function readGraphFromJSON({
   for (let i = 0; i < nodesJson.length; i += 1) {
     const nodeJson = nodesJson[i];
     const node = readNodeJSON({ graph: graphApi, registry, nodeJson });
+    const id = nodeJson.id;
 
-    if (node.id in nodes) {
-      `can not create new node with id ${node.id} as one with that id already exists.`;
+    if (id in nodes) {
+      throw new Error(
+        `can not create new node with id ${id} as one with that id already exists.`
+      );
     }
 
-    nodes[node.id] = node;
+    nodes[id] = node;
   }
 
   // connect up the graph edges from BehaviorNode inputs to outputs.  This is required to follow execution

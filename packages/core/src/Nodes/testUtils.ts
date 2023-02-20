@@ -12,7 +12,10 @@ import { NodeConfigurationDescription } from './Registry/NodeDescription';
 
 const makeEmptyGraph = (): IGraphApi => {
   const registry = new Registry();
-  return makeGraphApi({ registry, dependencies: {} });
+  return makeGraphApi({
+    dependencies: {},
+    valuesTypeRegistry: registry.values
+  });
 };
 
 export type SocketValues<TSockets extends SocketsDefinition> = {
