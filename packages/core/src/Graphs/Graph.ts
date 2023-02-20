@@ -1,5 +1,4 @@
 import { CustomEvent } from '../Events/CustomEvent';
-import { generateUuid } from '../generateUuid';
 import { Metadata } from '../Metadata';
 import { NodeConfiguration } from '../Nodes/Node';
 import { INode } from '../Nodes/NodeInstance';
@@ -34,7 +33,6 @@ export const createNode = ({
   graph,
   registry: { nodes, values },
   nodeTypeName,
-  nodeId = generateUuid(),
   nodeConfiguration = {}
 }: {
   graph: IGraphApi;
@@ -54,8 +52,6 @@ export const createNode = ({
   }
 
   const node = nodeDefinition.nodeFactory(graph, nodeConfiguration);
-
-  node.id = nodeId;
 
   node.inputs.forEach((socket: Socket) => {
     if (socket.valueTypeName !== 'flow' && socket.value === undefined) {

@@ -85,7 +85,7 @@ export function readGraphFromJSON({
   }
 
   // connect up the graph edges from BehaviorNode inputs to outputs.  This is required to follow execution
-  Object.values(nodes).forEach((node) => {
+  Object.entries(nodes).forEach(([nodeId, node]) => {
     // initialize the inputs by resolving to the reference nodes.
     node.inputs.forEach((inputSocket) => {
       inputSocket.links.forEach((link) => {
@@ -107,7 +107,7 @@ export function readGraphFromJSON({
         }
 
         // add, only if unique
-        const upstreamLink = new Link(node.id, inputSocket.name);
+        const upstreamLink = new Link(nodeId, inputSocket.name);
         if (
           upstreamOutputSocket.links.findIndex(
             (value) =>
@@ -141,7 +141,7 @@ export function readGraphFromJSON({
         }
 
         // add, only if unique
-        const downstreamLink = new Link(node.id, outputSocket.name);
+        const downstreamLink = new Link(nodeId, outputSocket.name);
         if (
           downstreamInputSocket.links.findIndex(
             (value) =>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useReactFlow, XYPosition } from "reactflow";
 import { useOnPressKey } from "../hooks/useOnPressKey";
-import { NodeSpecJSON } from "packages/core/dist/behave-graph-core.cjs";
+import { NodeSpecJSON } from "@behave-graph/core";
 
 export type NodePickerFilters = {
   handleType: "source" | "target";
@@ -31,17 +31,17 @@ export const NodePicker = ({
   if (!specJSON) return null;
   let filtered = specJSON;
   if (filters !== undefined) {
-    filtered = filtered.filter((node) => {
+    filtered = filtered?.filter((node) => {
       const sockets =
         filters?.handleType === "source" ? node.outputs : node.inputs;
       return sockets.some((socket) => socket.valueType === filters?.valueType);
     });
   }
 
-  filtered = filtered.filter((node) => {
+  filtered = filtered?.filter((node) => {
     const term = search.toLowerCase();
     return node.type.toLowerCase().includes(term);
-  });
+  }) || [];
 
   return (
     <div
