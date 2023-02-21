@@ -6,7 +6,7 @@ import ReactFlow, {
 import { GraphJSON } from "@behave-graph/core";
 import CustomControls from "./Controls";
 import { NodePicker } from "./NodePicker";
-import { useRegisterCoreProfileAndOthers } from "../hooks/useRegisterCoreProfileAndOthers";
+import { useRegistryWithCoreProfile } from "../hooks/useRegistryWithCoreProfile";
 import { useNodeSpecJson } from "../hooks/useNodeSpecJson";
 import { useBehaveGraphFlow } from "../hooks/useBehaveGraphFlow";
 import { useGraphRunner } from "../hooks/useGraphRunner";
@@ -21,7 +21,7 @@ type FlowProps = {
 }
 
 export const Flow: FC<FlowProps> = ({ initialGraph: graph, examples }) => {
-  const registry = useRegisterCoreProfileAndOthers({});
+  const registry = useRegistryWithCoreProfile({});
 
   const dependencies = useCoreDependencies();
 

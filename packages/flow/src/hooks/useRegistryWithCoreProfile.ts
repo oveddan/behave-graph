@@ -5,7 +5,7 @@ import {
 } from '@behave-graph/core';
 import { useEffect, useState } from 'react';
 
-export const useRegisterCoreProfileAndOthers = ({
+export const useRegistryWithCoreProfile = ({
   otherRegisters
 }: {
   otherRegisters?: ((registry: IRegistry) => void)[];

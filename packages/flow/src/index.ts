@@ -21,7 +21,7 @@ export * from './hooks/useGraphRunner';
 export * from './hooks/useDependencies';
 export * from './hooks/useBehaveGraphFlow';
 export * from './hooks/useNodeSpecJson';
-export * from './hooks/useRegisterCoreProfileAndOthers';
+export * from './hooks/useRegistryWithCoreProfile';
 export * from './hooks/useCustomNodeTypes';
 
 export * from './transformers/behaveToFlow';
