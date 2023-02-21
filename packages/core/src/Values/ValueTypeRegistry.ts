@@ -1,7 +1,19 @@
 import { ValueType } from './ValueType';
 
-export class ValueTypeRegistry {
-  private readonly valueTypeNameToValueType: { [key: string]: ValueType } = {};
+export type ValueTypeMap = { [key: string]: ValueType };
+
+export interface IQueriableRegistry<T> {
+  contains(name: string): boolean;
+  get(name: string): T;
+  getAllNames(): string[];
+  getAll(): T[];
+}
+
+export type IQuerieableValueTypeRegistry = IQueriableRegistry<ValueType>;
+
+// Deprecated: use IQueriableRegistry<ValueType> instead
+export class ValueTypeRegistry implements IQuerieableValueTypeRegistry {
+  private readonly valueTypeNameToValueType: ValueTypeMap = {};
 
   register(...valueTypes: Array<ValueType>) {
     valueTypes.forEach((valueType) => {
@@ -10,6 +22,10 @@ export class ValueTypeRegistry {
       }
       this.valueTypeNameToValueType[valueType.name] = valueType;
     });
+  }
+
+  contains(typeName: string): boolean {
+    throw new Error('no implmentation for contains (yet)');
   }
 
   get(valueTypeName: string): ValueType {

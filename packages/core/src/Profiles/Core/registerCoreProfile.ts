@@ -1,9 +1,17 @@
 /* eslint-disable max-len */
 
 import { getNodeDescriptions } from '../../Nodes/Registry/NodeDescription';
+import {
+  NodeDefinition,
+  NodeTypeRegistry
+} from '../../Nodes/Registry/NodeTypeRegistry';
 import { IRegistry } from '../../Registry';
-import { ValueTypeRegistry } from '../../Values/ValueTypeRegistry';
-import { registerSerializersForValueType } from '../registerSerializersForValueType';
+import { ValueType } from '../../Values/ValueType';
+import {
+  IQuerieableValueTypeRegistry,
+  ValueTypeRegistry
+} from '../../Values/ValueTypeRegistry';
+import { getStringConversionsForValueType } from '../registerSerializersForValueType';
 import { ILifecycleEventEmitter } from './Abstractions/ILifecycleEventEmitter';
 import { ILogger } from './Abstractions/ILogger';
 import { OnCustomEvent } from './CustomEvents/OnCustomEvent';
@@ -55,77 +63,110 @@ export const makeCoreDependencies = ({
   [loggerDependencyKey]: logger
 });
 
-export function registerCoreValueTypes(values: ValueTypeRegistry) {
-  // pull in value type nodes
-  values.register(BooleanValue);
-  values.register(StringValue);
-  values.register(IntegerValue);
-  values.register(FloatValue);
+export function getCoreValueTypes(): Array<ValueType<any, any>> {
+  return [BooleanValue, StringValue, IntegerValue, FloatValue];
 }
 
-export function registerCoreProfile(registry: IRegistry) {
-  const { nodes, values } = registry;
+export function toMap<T extends { name: string }>(
+  elements: T[]
+): { [key: string]: T } {
+  return Object.fromEntries(elements.map((element) => [element.name, element]));
+}
 
-  registerCoreValueTypes(values);
-
+export function registerCoreValueTypes(values: ValueTypeRegistry) {
   // pull in value type nodes
-  nodes.register(...getNodeDescriptions(StringNodes));
-  nodes.register(...getNodeDescriptions(BooleanNodes));
-  nodes.register(...getNodeDescriptions(IntegerNodes));
-  nodes.register(...getNodeDescriptions(FloatNodes));
+  values.register(...getCoreValueTypes());
+}
 
-  // custom events
+export function getCoreNodeDefinitions(): NodeDefinition[] {
+  return [
+    ...getNodeDescriptions(StringNodes),
+    ...getNodeDescriptions(BooleanNodes),
+    ...getNodeDescriptions(IntegerNodes),
+    ...getNodeDescriptions(FloatNodes),
 
-  nodes.register(OnCustomEvent.Description);
-  nodes.register(TriggerCustomEvent.Description);
+    // custom events
 
-  // variables
+    OnCustomEvent.Description,
+    TriggerCustomEvent.Description,
 
-  nodes.register(VariableGet);
-  nodes.register(VariableSet);
+    // variables
 
-  // complex logic
+    VariableGet,
+    VariableSet,
 
-  nodes.register(Easing);
+    // complex logic
 
-  // actions
+    Easing,
 
-  nodes.register(DebugLog);
-  nodes.register(AssertExpectTrue.Description);
+    // actions
 
-  // events
+    DebugLog,
+    AssertExpectTrue.Description,
 
-  nodes.register(LifecycleOnStart);
-  nodes.register(LifecycleOnEnd);
-  nodes.register(LifecycleOnTick);
+    // events
 
-  // time
+    LifecycleOnStart,
+    LifecycleOnEnd,
+    LifecycleOnTick,
 
-  nodes.register(Delay.Description);
-  nodes.register(...getNodeDescriptions(TimeNodes));
+    // time
 
-  // flow control
+    Delay.Description,
+    ...getNodeDescriptions(TimeNodes),
 
-  nodes.register(Branch);
-  nodes.register(FlipFlop);
-  nodes.register(ForLoop);
-  nodes.register(Sequence);
-  nodes.register(SwitchOnInteger);
-  nodes.register(SwitchOnString);
-  nodes.register(Debounce.Description);
-  nodes.register(Throttle.Description);
-  nodes.register(DoN);
-  nodes.register(DoOnce);
-  nodes.register(Gate);
-  nodes.register(MultiGate);
-  nodes.register(WaitAll.Description);
-  nodes.register(Counter);
+    // flow control
 
+    Branch,
+    FlipFlop,
+    ForLoop,
+    Sequence,
+    SwitchOnInteger,
+    SwitchOnString,
+    Debounce.Description,
+    Throttle.Description,
+    DoN,
+    DoOnce,
+    Gate,
+    MultiGate,
+    WaitAll.Description,
+    Counter
+  ];
+}
+
+export function registerCoreNodes(nodes: NodeTypeRegistry) {
+  // pull in value type nodes
+  nodes.register(...getCoreNodeDefinitions());
+}
+
+export function getStringConversions(
+  values: IQuerieableValueTypeRegistry
+): NodeDefinition[] {
+  return ['boolean', 'float', 'integer'].flatMap((valueTypeName) =>
+    getStringConversionsForValueType({ values, valueTypeName })
+  );
+}
+
+export function registerSerializers({
+  values,
+  nodes
+}: {
+  nodes: NodeTypeRegistry;
+  values: IQuerieableValueTypeRegistry;
+}) {
   // string converters
-
   ['boolean', 'float', 'integer'].forEach((valueTypeName) => {
-    registerSerializersForValueType(registry, valueTypeName);
+    nodes.register(
+      ...getStringConversionsForValueType({ values, valueTypeName })
+    );
   });
+}
 
-  return registry;
+export function registerCoreProfile({
+  nodes,
+  values
+}: Pick<IRegistry, 'values' | 'nodes'>) {
+  registerCoreValueTypes(values);
+  registerCoreNodes(nodes);
+  registerSerializers({ nodes, values });
 }

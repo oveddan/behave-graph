@@ -25,7 +25,7 @@ describe('readGraphFromJSON', () => {
       ]
     };
     expect(() =>
-      readGraphFromJSON({ graphJson: json, registry, dependencies: {} })
+      readGraphFromJSON({ graphJson: json, ...registry, dependencies: {} })
     ).toThrow();
   });
 
@@ -44,7 +44,7 @@ describe('readGraphFromJSON', () => {
       ]
     };
     expect(() =>
-      readGraphFromJSON({ graphJson: json, registry, dependencies: {} })
+      readGraphFromJSON({ graphJson: json, ...registry, dependencies: {} })
     ).toThrow();
   });
 
@@ -70,7 +70,7 @@ describe('readGraphFromJSON', () => {
       ]
     };
     expect(() =>
-      readGraphFromJSON({ graphJson: json, registry, dependencies: {} })
+      readGraphFromJSON({ graphJson: json, ...registry, dependencies: {} })
     ).toThrow();
   });
 
@@ -96,7 +96,7 @@ describe('readGraphFromJSON', () => {
       ]
     };
     expect(() =>
-      readGraphFromJSON({ graphJson: json, registry, dependencies: {} })
+      readGraphFromJSON({ graphJson: json, ...registry, dependencies: {} })
     ).toThrow();
   });
 });

@@ -50,7 +50,8 @@ for (const key in exampleMap) {
       expect(() => {
         parsedGraphJson = readGraphFromJSON({
           graphJson: exampleJson,
-          registry,
+          nodes: registry.nodes,
+          values: registry.values,
           dependencies: {}
         });
       }).not.toThrow();

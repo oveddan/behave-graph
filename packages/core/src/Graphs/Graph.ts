@@ -3,9 +3,9 @@ import { Metadata } from '../Metadata';
 import { NodeConfiguration } from '../Nodes/Node';
 import { INode } from '../Nodes/NodeInstance';
 import { Dependencies } from '../Nodes/Registry/DependenciesRegistry';
-import { IRegistry } from '../Registry';
+import { IQueriableNodeRegistry } from '../Nodes/Registry/NodeTypeRegistry';
 import { Socket } from '../Sockets/Socket';
-import { ValueTypeRegistry } from '../Values/ValueTypeRegistry';
+import { IQuerieableValueTypeRegistry } from '../Values/ValueTypeRegistry';
 import { Variable } from '../Variables/Variable';
 // Purpose:
 //  - stores the node graph
@@ -13,7 +13,7 @@ import { Variable } from '../Variables/Variable';
 export interface IGraphApi {
   readonly variables: { [id: string]: Variable };
   readonly customEvents: { [id: string]: CustomEvent };
-  readonly values: ValueTypeRegistry;
+  readonly values: Pick<IQuerieableValueTypeRegistry, 'get'>;
   readonly getDependency: <T>(id: string) => T | undefined;
 }
 
@@ -31,14 +31,15 @@ export type GraphInstance = {
 
 export const createNode = ({
   graph,
-  registry: { nodes, values },
+  nodes,
+  values,
   nodeTypeName,
   nodeConfiguration = {}
 }: {
   graph: IGraphApi;
-  registry: IRegistry;
+  nodes: Pick<IQueriableNodeRegistry, 'get' | 'contains'>;
+  values: Pick<IQuerieableValueTypeRegistry, 'get'>;
   nodeTypeName: string;
-  nodeId?: string;
   nodeConfiguration?: NodeConfiguration;
 }) => {
   let nodeDefinition = undefined;
@@ -70,7 +71,7 @@ export const makeGraphApi = ({
 }: {
   customEvents?: GraphCustomEvents;
   variables?: GraphVariables;
-  valuesTypeRegistry: ValueTypeRegistry;
+  valuesTypeRegistry: Pick<IQuerieableValueTypeRegistry, 'get'>;
   dependencies: Dependencies;
 }): IGraphApi => ({
   variables,
