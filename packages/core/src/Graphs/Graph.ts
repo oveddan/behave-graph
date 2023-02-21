@@ -14,7 +14,7 @@ export interface IGraphApi {
   readonly variables: { [id: string]: Variable };
   readonly customEvents: { [id: string]: CustomEvent };
   readonly values: ValueTypeRegistry;
-  readonly getDependency: <T>(id: string) => T;
+  readonly getDependency: <T>(id: string) => T | undefined;
 }
 
 export type GraphNodes = { [id: string]: INode };
@@ -76,5 +76,10 @@ export const makeGraphApi = ({
   variables,
   customEvents,
   values: valuesTypeRegistry,
-  getDependency: (id: string) => dependencies[id]
+  getDependency: (id: string) => {
+    const result = dependencies[id];
+    if (!result)
+      console.error(`Dependency not found ${id}.  Did you register it?`);
+    return result;
+  }
 });

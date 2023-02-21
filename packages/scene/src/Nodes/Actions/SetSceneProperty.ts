@@ -14,7 +14,7 @@ export const SetSceneProperty = (valueTypeNames: string[]) =>
 
           return {
             valueType: 'string',
-            choices: scene.getProperties()
+            choices: scene?.getProperties()
           };
         },
         value: valueTypeName,
@@ -26,7 +26,7 @@ export const SetSceneProperty = (valueTypeNames: string[]) =>
       initialState: undefined,
       triggered: ({ commit, read, graph: { getDependency } }) => {
         const scene = getSceneDependencey(getDependency);
-        scene.setProperty(read('jsonPath'), valueTypeName, read('value'));
+        scene?.setProperty(read('jsonPath'), valueTypeName, read('value'));
         commit('flow');
       }
     })
