@@ -2,8 +2,7 @@
 import {
   Dependencies,
   getNodeDescriptions,
-  IRegistry,
-  registerSerializersForValueType
+  IRegistry
 } from '@behave-graph/core';
 
 import { IScene } from './Abstractions/IScene';
@@ -76,10 +75,9 @@ export function registerSceneProfile(registry: IRegistry) {
   ];
 
   // variables
-
-  newValueTypeNames.forEach((valueTypeName) => {
-    registerSerializersForValueType(registry, valueTypeName);
-  });
+  // newValueTypeNames.forEach((valueTypeName) => {
+  //   registerSerializersForValueType(registry, valueTypeName);
+  // });
 
   return registry;
 }

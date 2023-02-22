@@ -1,8 +1,10 @@
 /* eslint-disable max-len */
 
 import { getNodeDescriptions } from '../../Nodes/Registry/NodeDescription';
+import { NodeTypeRegistry } from '../../Nodes/Registry/NodeTypeRegistry';
 import { IRegistry } from '../../Registry';
 import { ValueTypeRegistry } from '../../Values/ValueTypeRegistry';
+import { registerStringConversionsForValueType } from '../registerSerializersForValueType';
 import { ILifecycleEventEmitter } from './Abstractions/ILifecycleEventEmitter';
 import { ILogger } from './Abstractions/ILogger';
 import { OnCustomEvent } from './CustomEvents/OnCustomEvent';
@@ -30,7 +32,6 @@ import {
 } from './Lifecycle/LifecycleOnStart';
 import { LifecycleOnTick } from './Lifecycle/LifecycleOnTick';
 import { Easing } from './Logic/Easing';
-import { registerSerializersForValueType } from '../registerSerializersForValueType';
 import { Delay } from './Time/Delay';
 import * as TimeNodes from './Time/TimeNodes';
 import * as BooleanNodes from './Values/BooleanNodes';
@@ -63,11 +64,7 @@ export function registerCoreValueTypes(values: ValueTypeRegistry) {
   values.register(FloatValue);
 }
 
-export function registerCoreProfile(registry: IRegistry) {
-  const { nodes, values } = registry;
-
-  registerCoreValueTypes(values);
-
+export function registerCoreNodes(nodes: NodeTypeRegistry) {
   // pull in value type nodes
   nodes.register(...getNodeDescriptions(StringNodes));
   nodes.register(...getNodeDescriptions(BooleanNodes));
@@ -120,12 +117,23 @@ export function registerCoreProfile(registry: IRegistry) {
   nodes.register(MultiGate);
   nodes.register(WaitAll.Description);
   nodes.register(Counter);
+}
 
+export function registerSerializers({
+  values,
+  nodes
+}: Pick<IRegistry, 'values' | 'nodes'>) {
   // string converters
-
   ['boolean', 'float', 'integer'].forEach((valueTypeName) => {
-    registerSerializersForValueType(registry, valueTypeName);
+    registerStringConversionsForValueType({ nodes, values, valueTypeName });
   });
+}
 
-  return registry;
+export function registerCoreProfile({
+  nodes,
+  values
+}: Pick<IRegistry, 'values' | 'nodes'>) {
+  registerCoreValueTypes(values);
+  registerCoreNodes(nodes);
+  registerSerializers({ nodes, values });
 }

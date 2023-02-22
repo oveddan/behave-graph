@@ -1,26 +1,32 @@
 import { makeInNOutFunctionDesc } from '../Nodes/FunctionNode';
-import { IRegistry } from '../Registry';
+import { NodeTypeRegistry } from '../Nodes/Registry/NodeTypeRegistry';
 import { toCamelCase } from '../toCamelCase';
+import { ValueTypeRegistry } from '../Values/ValueTypeRegistry';
 
-export function registerSerializersForValueType(
-  registry: IRegistry,
-  valueTypeName: string
-) {
+export function registerStringConversionsForValueType({
+  nodes,
+  values,
+  valueTypeName
+}: {
+  nodes: NodeTypeRegistry;
+  values: ValueTypeRegistry;
+  valueTypeName: string;
+}) {
   const camelCaseValueTypeName = toCamelCase(valueTypeName);
-  registry.nodes.register(
+  nodes.register(
     makeInNOutFunctionDesc({
       name: `math/to${camelCaseValueTypeName}/string`,
       label: `To ${camelCaseValueTypeName}`,
       in: ['string'],
       out: valueTypeName,
-      exec: (a: string) => registry.values.get(valueTypeName).deserialize(a)
+      exec: (a: string) => values.get(valueTypeName).deserialize(a)
     }),
     makeInNOutFunctionDesc({
       name: `math/toString/${valueTypeName}`,
       label: 'To String',
       in: [valueTypeName],
       out: 'string',
-      exec: (a: any) => registry.values.get(valueTypeName).serialize(a)
+      exec: (a: any) => values.get(valueTypeName).serialize(a)
     })
   );
 }

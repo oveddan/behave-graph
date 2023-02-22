@@ -1,9 +1,20 @@
 import {
   createRegistry,
   IRegistry,
-  registerCoreProfile
+  registerCoreNodes,
+  registerCoreValueTypes,
+  registerSerializers
 } from '@behave-graph/core';
 import { useEffect, useState } from 'react';
+
+const createRegistryWithCoreProfile = () => {
+  const { nodes, values } = createRegistry();
+  registerCoreValueTypes(values);
+  registerCoreNodes(nodes);
+  registerSerializers({ nodes, values });
+
+  return { nodes, values };
+};
 
 export const useRegistryWithCoreProfile = ({
   otherRegisters
@@ -13,8 +24,8 @@ export const useRegistryWithCoreProfile = ({
   const [registry, setRegistry] = useState<IRegistry>();
 
   useEffect(() => {
-    const { nodes, values } = createRegistry();
-    registerCoreProfile({ nodes, values });
+    const { nodes, values } = createRegistryWithCoreProfile();
+
     otherRegisters?.forEach((register) => {
       register({ nodes, values });
     });
