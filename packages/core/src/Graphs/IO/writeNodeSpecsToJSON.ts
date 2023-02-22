@@ -1,7 +1,9 @@
 import { NodeCategory } from '../../Nodes/NodeDefinitions';
 import { Dependencies } from '../../Nodes/Registry/DependenciesRegistry';
-import { IRegistry } from '../../Registry';
+import { NodeDefinition } from '../../Nodes/Registry/NodeTypeRegistry';
 import { Choices } from '../../Sockets/Socket';
+import { ValueType } from '../../Values/ValueType';
+import { IQueriableRegistry } from '../../Values/ValueTypeRegistry';
 import { createNode, IGraphApi } from '../Graph';
 import {
   ChoiceJSON,
@@ -18,10 +20,12 @@ function toChoices(valueChoices: Choices | undefined): ChoiceJSON | undefined {
 }
 
 export function writeNodeSpecsToJSON({
-  registry: { values, nodes },
+  values,
+  nodes,
   dependencies
 }: {
-  registry: IRegistry;
+  values: IQueriableRegistry<ValueType>;
+  nodes: IQueriableRegistry<NodeDefinition>;
   dependencies: Dependencies;
 }): NodeSpecJSON[] {
   const nodeSpecsJSON: NodeSpecJSON[] = [];
@@ -38,7 +42,8 @@ export function writeNodeSpecsToJSON({
   nodes.getAllNames().forEach((nodeTypeName) => {
     const node = createNode({
       graph,
-      registry: { nodes, values },
+      nodes,
+      values,
       nodeTypeName
     });
 

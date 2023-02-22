@@ -16,7 +16,11 @@ const [nodes, edges] = behaveToFlow(flowGraph);
 it('transforms from flow to behave', () => {
   const registry = createRegistry();
   registerCoreProfile(registry);
-  const specJSON = writeNodeSpecsToJSON({ registry, dependencies: {} });
+  const specJSON = writeNodeSpecsToJSON({
+    values: registry.values,
+    nodes: registry.nodes,
+    dependencies: {}
+  });
   const output = flowToBehave(nodes, edges, specJSON);
   expect(output).toEqual(flowGraph);
 });

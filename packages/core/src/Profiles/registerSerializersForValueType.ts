@@ -1,19 +1,16 @@
 import { makeInNOutFunctionDesc } from '../Nodes/FunctionNode';
-import { NodeTypeRegistry } from '../Nodes/Registry/NodeTypeRegistry';
 import { toCamelCase } from '../toCamelCase';
-import { ValueTypeRegistry } from '../Values/ValueTypeRegistry';
+import { IQuerieableValueTypeRegistry } from '../Values/ValueTypeRegistry';
 
-export function registerStringConversionsForValueType({
-  nodes,
+export function getStringConversionsForValueType({
   values,
   valueTypeName
 }: {
-  nodes: NodeTypeRegistry;
-  values: ValueTypeRegistry;
+  values: Pick<IQuerieableValueTypeRegistry, 'get'>;
   valueTypeName: string;
 }) {
   const camelCaseValueTypeName = toCamelCase(valueTypeName);
-  nodes.register(
+  return [
     makeInNOutFunctionDesc({
       name: `math/to${camelCaseValueTypeName}/string`,
       label: `To ${camelCaseValueTypeName}`,
@@ -28,5 +25,5 @@ export function registerStringConversionsForValueType({
       out: 'string',
       exec: (a: any) => values.get(valueTypeName).serialize(a)
     })
-  );
+  ];
 }
