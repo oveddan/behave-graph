@@ -25,9 +25,11 @@ const createRegistryWithCoreProfile = () => {
 };
 
 export const useCoreValueDefinitions = () => {
-  const coreValueTypes = useMemo(() => getCoreValueTypes(), []);
-  const valueTypes = coreValueTypes;
-  const valuesTypesMap = useMemo(() => toMap(valueTypes), [valueTypes]);
+  const valuesTypesMap = useMemo(() => {
+    const valueTypes = getCoreValueTypes();
+
+    return toMap(valueTypes);
+  }, []);
   const queriableValuesDefinitions = useQueriableDefinitions(valuesTypesMap);
 
   return queriableValuesDefinitions;
@@ -38,22 +40,18 @@ export const useCoreNodeDefinitions = ({
 }: {
   values: IQuerieableValueTypeRegistry;
 }) => {
-  const coreNodeDefinitions = useMemo(() => getCoreNodeDefinitions(), []);
-  const stringConversionNodeDefinitions = useMemo(
-    () => getStringConversions(values),
-    [values]
-  );
+  const nodeDefinitionsMap = useMemo(() => {
+    const coreNodeDefinitions = getCoreNodeDefinitions();
+    const stringConversionNodeDefinitions = getStringConversions(values);
 
-  const nodeDefinitions = useMemo(
-    () => coreNodeDefinitions.concat(stringConversionNodeDefinitions),
-    [coreNodeDefinitions, stringConversionNodeDefinitions]
-  );
-  const nodeDefinitionMap = useMemo(
-    () => toNodeDefinitionMap(nodeDefinitions),
-    [nodeDefinitions]
-  );
+    const nodeDefinitions = coreNodeDefinitions.concat(
+      stringConversionNodeDefinitions
+    );
 
-  return useQueriableDefinitions(nodeDefinitionMap);
+    return toNodeDefinitionMap(nodeDefinitions);
+  }, [values]);
+
+  return useQueriableDefinitions(nodeDefinitionsMap);
 };
 
 export const useCoreNodeDefinitionsAndValueTypes = ({
@@ -61,13 +59,13 @@ export const useCoreNodeDefinitionsAndValueTypes = ({
 }: {
   otherRegisters?: ((registry: IRegistry) => void)[];
 }) => {
-  const queriableValuesDefinitions = useCoreValueDefinitions();
+  const valuesDefinitions = useCoreValueDefinitions();
   const nodeDefinitions = useCoreNodeDefinitions({
-    values: queriableValuesDefinitions
+    values: valuesDefinitions
   });
 
   return {
     nodeDefinitions,
-    valuesDefinitions: queriableValuesDefinitions
+    valuesDefinitions
   };
 };
