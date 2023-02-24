@@ -12,7 +12,6 @@ import { useBehaveGraphFlow } from "../hooks/useBehaveGraphFlow";
 import { useGraphRunner } from "../hooks/useGraphRunner";
 import { useFlowHandlers } from "../hooks/useFlowHandlers";
 import { Examples } from "./modals/LoadModal";
-import { useCoreDependencies } from "../hooks/useDependencies";
 
 type FlowProps = {
   initialGraph: GraphJSON;

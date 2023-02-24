@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef, useState, memo } from 'react';
 import { Mesh, Object3D } from 'three';
 import { GLTF } from 'three-stdlib';
 import ToggleAnimations from './ToggleAnimations';
-import { AnimationsState, OnClickListener, OnClickListeners } from './useScene';
+import { AnimationsState } from './useScene';
+import { OnClickListener, OnClickListeners } from '@behave-graph/scene'
 
 const RegisterOnClickListenersOnElements = ({
   jsonPath,

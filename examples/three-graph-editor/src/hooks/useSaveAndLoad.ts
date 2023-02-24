@@ -1,7 +1,10 @@
 import { GraphJSON } from '@behave-graph/core';
 
-export const exampleBehaveGraphFileUrl = (fileName: string) => publicUrl(`/examples/graphs/${fileName}`);
-export const fetchBehaviorGraphJson = async (url: string) => (await (await fetch(url)).json()) as GraphJSON;
+export const exampleBehaveGraphFileUrl = (fileName: string) =>
+  publicUrl(`/examples/graphs/${fileName}`);
+export const fetchBehaviorGraphJson = async (url: string) =>
+  // eslint-disable-next-line unicorn/no-await-expression-member
+  (await (await fetch(url)).json()) as GraphJSON;
 
 function readFileContents(file: File) {
   return new Promise<string | ArrayBuffer>((resolve, reject) => {
@@ -50,6 +53,7 @@ export type ModelFile =
     };
 
 export const fetchModelFile = async (url: string, fileName: string) => {
+  // eslint-disable-next-line unicorn/no-await-expression-member
   const blob = await (await fetch(url)).blob();
 
   const file = new File([blob], fileName);
