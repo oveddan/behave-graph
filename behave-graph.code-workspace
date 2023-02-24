@@ -2,18 +2,17 @@
   "folders": [
     {
       "path": "."
-    },
-    {
-      "path": "../threeify"
-    },
-    {
-      "path": "../gl-matrix"
     }
   ],
   "settings": {
     "cSpell.words": [
       "fortawesome",
       "reactflow"
+    ],
+    "jest.disabledWorkspaceFolders": [
+      "gl-matrix",
+      "behave-graph",
+      "threeify"
     ]
   },
   "extensions": {}

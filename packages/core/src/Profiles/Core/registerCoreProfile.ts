@@ -1,8 +1,17 @@
 /* eslint-disable max-len */
-import { DependenciesRegistry } from '../../Nodes/Registry/DependenciesRegistry';
+
 import { getNodeDescriptions } from '../../Nodes/Registry/NodeDescription';
+import {
+  NodeDefinition,
+  NodeTypeRegistry
+} from '../../Nodes/Registry/NodeTypeRegistry';
 import { IRegistry } from '../../Registry';
-import { ValueTypeRegistry } from '../../Values/ValueTypeRegistry';
+import { ValueType } from '../../Values/ValueType';
+import {
+  IQuerieableValueTypeRegistry,
+  ValueTypeRegistry
+} from '../../Values/ValueTypeRegistry';
+import { getStringConversionsForValueType } from '../registerSerializersForValueType';
 import { ILifecycleEventEmitter } from './Abstractions/ILifecycleEventEmitter';
 import { ILogger } from './Abstractions/ILogger';
 import { OnCustomEvent } from './CustomEvents/OnCustomEvent';
@@ -19,6 +28,8 @@ import { ForLoop } from './Flow/ForLoop';
 import { Gate } from './Flow/Gate';
 import { MultiGate } from './Flow/MultieGate';
 import { Sequence } from './Flow/Sequence';
+import { SwitchOnInteger } from './Flow/SwitchOnInteger';
+import { SwitchOnString } from './Flow/SwitchOnString';
 import { Throttle } from './Flow/Throttle';
 import { WaitAll } from './Flow/WaitAll';
 import { LifecycleOnEnd } from './Lifecycle/LifecycleOnEnd';
@@ -28,7 +39,6 @@ import {
 } from './Lifecycle/LifecycleOnStart';
 import { LifecycleOnTick } from './Lifecycle/LifecycleOnTick';
 import { Easing } from './Logic/Easing';
-import { registerSerializersForValueType } from './registerSerializersForValueType';
 import { Delay } from './Time/Delay';
 import * as TimeNodes from './Time/TimeNodes';
 import * as BooleanNodes from './Values/BooleanNodes';
@@ -42,91 +52,121 @@ import { StringValue } from './Values/StringValue';
 import { VariableGet } from './Variables/VariableGet';
 import { VariableSet } from './Variables/VariableSet';
 
-export function registerLogger(
-  registry: DependenciesRegistry,
-  logger: ILogger
-) {
-  registry.register(loggerDependencyKey, logger);
+export const makeCoreDependencies = ({
+  lifecyleEmitter,
+  logger
+}: {
+  lifecyleEmitter: ILifecycleEventEmitter;
+  logger: ILogger;
+}) => ({
+  [lifecycleEventEmitterDependencyKey]: lifecyleEmitter,
+  [loggerDependencyKey]: logger
+});
+
+export function getCoreValueTypes(): Array<ValueType<any, any>> {
+  return [BooleanValue, StringValue, IntegerValue, FloatValue];
 }
 
-export function registerLifecycleEventEmitter(
-  registry: DependenciesRegistry,
-  emitter: ILifecycleEventEmitter
-) {
-  registry.register(lifecycleEventEmitterDependencyKey, emitter);
+export function toMap<T extends { name: string }>(
+  elements: T[]
+): { [key: string]: T } {
+  return Object.fromEntries(elements.map((element) => [element.name, element]));
 }
 
 export function registerCoreValueTypes(values: ValueTypeRegistry) {
   // pull in value type nodes
-  values.register(BooleanValue);
-  values.register(StringValue);
-  values.register(IntegerValue);
-  values.register(FloatValue);
+  values.register(...getCoreValueTypes());
 }
 
-export function registerCoreProfile(
-  registry: Pick<IRegistry, 'nodes' | 'values'>
-) {
-  const { nodes, values } = registry;
+export function getCoreNodeDefinitions(): NodeDefinition[] {
+  return [
+    ...getNodeDescriptions(StringNodes),
+    ...getNodeDescriptions(BooleanNodes),
+    ...getNodeDescriptions(IntegerNodes),
+    ...getNodeDescriptions(FloatNodes),
 
-  registerCoreValueTypes(values);
+    // custom events
 
+    OnCustomEvent.Description,
+    TriggerCustomEvent.Description,
+
+    // variables
+
+    VariableGet,
+    VariableSet,
+
+    // complex logic
+
+    Easing,
+
+    // actions
+
+    DebugLog,
+    AssertExpectTrue.Description,
+
+    // events
+
+    LifecycleOnStart,
+    LifecycleOnEnd,
+    LifecycleOnTick,
+
+    // time
+
+    Delay.Description,
+    ...getNodeDescriptions(TimeNodes),
+
+    // flow control
+
+    Branch,
+    FlipFlop,
+    ForLoop,
+    Sequence,
+    SwitchOnInteger,
+    SwitchOnString,
+    Debounce.Description,
+    Throttle.Description,
+    DoN,
+    DoOnce,
+    Gate,
+    MultiGate,
+    WaitAll.Description,
+    Counter
+  ];
+}
+
+export function registerCoreNodes(nodes: NodeTypeRegistry) {
   // pull in value type nodes
-  nodes.register(...getNodeDescriptions(StringNodes));
-  nodes.register(...getNodeDescriptions(BooleanNodes));
-  nodes.register(...getNodeDescriptions(IntegerNodes));
-  nodes.register(...getNodeDescriptions(FloatNodes));
+  nodes.register(...getCoreNodeDefinitions());
+}
 
-  // custom events
+export function getStringConversions(
+  values: IQuerieableValueTypeRegistry
+): NodeDefinition[] {
+  return ['boolean', 'float', 'integer'].flatMap((valueTypeName) =>
+    getStringConversionsForValueType({ values, valueTypeName })
+  );
+}
 
-  nodes.register(OnCustomEvent.Description);
-  nodes.register(TriggerCustomEvent.Description);
-
-  // variables
-
-  nodes.register(VariableGet);
-  nodes.register(VariableSet);
-
-  // complex logic
-
-  nodes.register(Easing);
-
-  // actions
-
-  nodes.register(DebugLog);
-  nodes.register(AssertExpectTrue.Description);
-
-  // events
-
-  nodes.register(LifecycleOnStart);
-  nodes.register(LifecycleOnEnd);
-  nodes.register(LifecycleOnTick);
-
-  // time
-
-  nodes.register(Delay.Description);
-  nodes.register(...getNodeDescriptions(TimeNodes));
-
-  // flow control
-
-  nodes.register(Branch);
-  nodes.register(FlipFlop);
-  nodes.register(ForLoop);
-  nodes.register(Sequence);
-  nodes.register(Debounce.Description);
-  nodes.register(Throttle.Description);
-  nodes.register(DoN);
-  nodes.register(DoOnce);
-  nodes.register(Gate);
-  nodes.register(MultiGate);
-  nodes.register(WaitAll.Description);
-  nodes.register(Counter);
-
+export function registerSerializers({
+  values,
+  nodes
+}: {
+  nodes: NodeTypeRegistry;
+  values: IQuerieableValueTypeRegistry;
+}) {
   // string converters
-
   ['boolean', 'float', 'integer'].forEach((valueTypeName) => {
-    registerSerializersForValueType(registry, valueTypeName);
+    nodes.register(
+      ...getStringConversionsForValueType({ values, valueTypeName })
+    );
   });
+}
 
-  return registry;
+export function registerCoreProfile({
+  nodes,
+  values
+}: Pick<IRegistry, 'values' | 'nodes'>) {
+  registerCoreValueTypes(values);
+  registerCoreNodes(nodes);
+  registerSerializers({ nodes, values });
 }
