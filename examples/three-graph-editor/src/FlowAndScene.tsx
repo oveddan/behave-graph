@@ -10,7 +10,6 @@ import { examplePairs } from './components/LoadModal';
 import {
   createSceneDependency,
 } from '@behave-graph/scene';
-import { IRegistry } from '@behave-graph/core';
 
 import { useScene } from './scene/useScene';
 import {
@@ -31,17 +30,12 @@ import {
 } from './hooks/useSaveAndLoad';
 import ReactFlow, { Background, BackgroundVariant } from 'reactflow';
 import { useEffect } from 'react';
-import { useWhyDidYouUpdate } from 'use-why-did-you-update';
 import { useSceneRegistry } from './hooks/useSceneRegistry';
 
 const [initialModelFile, initialBehaviorGraph] = examplePairs[0];
 
 const initialModelFileUrl = exampleModelFileUrl(initialModelFile);
 const initialBehaviorGraphUrl = exampleBehaveGraphFileUrl(initialBehaviorGraph);
-
-export const registerProfiles: ((
-  registry: Pick<IRegistry, 'nodes' | 'values'>
-) => void)[] = [registerSceneProfile];
 
 export function Flow() {
   const { setModelFile, gltf } = useSetAndLoadModelFile({
