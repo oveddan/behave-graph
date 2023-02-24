@@ -8,23 +8,21 @@ import useSetAndLoadModelFile, {
 import SplitEditor from './SplitEditor';
 import { examplePairs } from './components/LoadModal';
 import {
-  registerSceneProfile,
   createSceneDependency,
 } from '@behave-graph/scene';
 import { IRegistry } from '@behave-graph/core';
 
 import { useScene } from './scene/useScene';
 import {
-  useRegisterCoreProfileAndOthers,
   useBehaveGraphFlow,
   useGraphRunner,
   useNodeSpecJson,
   NodePicker,
   useFlowHandlers,
   useCustomNodeTypes,
-  useCoreDependencies,
   useMergeDependencies,
-  useDependency
+  useDependency,
+  useCoreRegistry
 } from '@behave-graph/flow';
 import { suspend } from 'suspend-react';
 import {
@@ -34,6 +32,7 @@ import {
 import ReactFlow, { Background, BackgroundVariant } from 'reactflow';
 import { useEffect } from 'react';
 import { useWhyDidYouUpdate } from 'use-why-did-you-update';
+import { useSceneRegistry } from './hooks/useSceneRegistry';
 
 const [initialModelFile, initialBehaviorGraph] = examplePairs[0];
 
@@ -49,11 +48,12 @@ export function Flow() {
     initialFileUrl: initialModelFileUrl
   });
 
-  const registry = useRegisterCoreProfileAndOthers({
-    otherRegisters:registerProfiles
-  });
+  const { nodeDefinitions: coreNodeDefinitions, valuesDefinitions: coreValueDefinitions, dependencies: coreDependencies } = useCoreRegistry();
 
-  const coreDependencies = useCoreDependencies();
+  const { nodeDefinitions, valuesDefinitions } = useSceneRegistry({
+    existingNodeDefinitions: coreNodeDefinitions,
+    existingValuesDefinitions: coreValueDefinitions
+  })
 
   const { scene, animations, sceneOnClickListeners } = useScene(gltf);
 
@@ -62,7 +62,8 @@ export function Flow() {
 
   const specJson = useNodeSpecJson({
     dependencies,
-    registry
+    nodes: nodeDefinitions,
+    values: valuesDefinitions
   });
 
   const initialGraphJson = suspend(async () => {
@@ -83,9 +84,10 @@ export function Flow() {
   
   const { togglePlay, playing } = useGraphRunner({
     graphJson,
-    registry,
+    valueTypeDefinitions: coreValueDefinitions,
     eventEmitter: coreDependencies.lifecycleEventEmitter,
-    dependencies
+    dependencies,
+    nodeDefinitions
   });
 
   const {

@@ -4,8 +4,9 @@ import {
   GraphJSON,
   GraphNodes,
   ILifecycleEventEmitter,
-  IQuerieableValueTypeRegistry,
-  readGraphFromJSON
+  NodeDefinitionsMap,
+  readGraphFromJSON,
+  ValueTypeMap
 } from '@behave-graph/core';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -16,13 +17,15 @@ export const useGraphRunner = ({
   graphJson,
   eventEmitter,
   autoRun = false,
-  valuesTypeRegistry,
+  nodeDefinitions,
+  valueTypeDefinitions,
   dependencies
 }: {
   graphJson: GraphJSON | undefined;
   eventEmitter: ILifecycleEventEmitter;
   autoRun?: boolean;
-  valuesTypeRegistry: IQuerieableValueTypeRegistry;
+  nodeDefinitions: NodeDefinitionsMap;
+  valueTypeDefinitions: ValueTypeMap;
   dependencies: Dependencies | undefined;
 }) => {
   const [engine, setEngine] = useState<Engine>();
@@ -42,13 +45,14 @@ export const useGraphRunner = ({
   }, []);
 
   useEffect(() => {
-    if (!graphJson || !valuesTypeRegistry || !run || !dependencies) return;
+    if (!graphJson || !valueTypeDefinitions || !run || !dependencies) return;
 
     let graphNodes: GraphNodes;
     try {
       graphNodes = readGraphFromJSON({
         graphJson,
-        values: valuesTypeRegistry,
+        nodes: nodeDefinitions,
+        values: valueTypeDefinitions,
         dependencies
       }).nodes;
     } catch (e) {
@@ -63,7 +67,7 @@ export const useGraphRunner = ({
       engine.dispose();
       setEngine(undefined);
     };
-  }, [graphJson, valuesTypeRegistry, run, dependencies]);
+  }, [graphJson, valueTypeDefinitions, nodeDefinitions, run, dependencies]);
 
   useEffect(() => {
     if (!engine || !run) return;

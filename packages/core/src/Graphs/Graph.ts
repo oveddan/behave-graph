@@ -3,9 +3,9 @@ import { Metadata } from '../Metadata';
 import { NodeConfiguration } from '../Nodes/Node';
 import { INode } from '../Nodes/NodeInstance';
 import { Dependencies } from '../Nodes/Registry/DependenciesRegistry';
-import { IQueriableNodeRegistry } from '../Nodes/Registry/NodeTypeRegistry';
+import { NodeDefinitionsMap } from '../Nodes/Registry/NodeTypeRegistry';
 import { Socket } from '../Sockets/Socket';
-import { IQuerieableValueTypeRegistry } from '../Values/ValueTypeRegistry';
+import { ValueTypeMap } from '../Values/ValueTypeRegistry';
 import { Variable } from '../Variables/Variable';
 // Purpose:
 //  - stores the node graph
@@ -13,7 +13,7 @@ import { Variable } from '../Variables/Variable';
 export interface IGraphApi {
   readonly variables: { [id: string]: Variable };
   readonly customEvents: { [id: string]: CustomEvent };
-  readonly values: Pick<IQuerieableValueTypeRegistry, 'get'>;
+  readonly values: ValueTypeMap;
   readonly getDependency: <T>(id: string) => T | undefined;
 }
 
@@ -37,14 +37,14 @@ export const createNode = ({
   nodeConfiguration = {}
 }: {
   graph: IGraphApi;
-  nodes: Pick<IQueriableNodeRegistry, 'get' | 'contains'>;
-  values: Pick<IQuerieableValueTypeRegistry, 'get'>;
+  nodes: NodeDefinitionsMap;
+  values: ValueTypeMap;
   nodeTypeName: string;
   nodeConfiguration?: NodeConfiguration;
 }) => {
   let nodeDefinition = undefined;
-  if (nodes.contains(nodeTypeName)) {
-    nodeDefinition = nodes.get(nodeTypeName);
+  if (nodes[nodeTypeName]) {
+    nodeDefinition = nodes[nodeTypeName];
   }
   if (nodeDefinition === undefined) {
     throw new Error(
@@ -56,7 +56,7 @@ export const createNode = ({
 
   node.inputs.forEach((socket: Socket) => {
     if (socket.valueTypeName !== 'flow' && socket.value === undefined) {
-      socket.value = values.get(socket.valueTypeName).creator();
+      socket.value = values[socket.valueTypeName]?.creator();
     }
   });
 
@@ -71,7 +71,7 @@ export const makeGraphApi = ({
 }: {
   customEvents?: GraphCustomEvents;
   variables?: GraphVariables;
-  valuesTypeRegistry: Pick<IQuerieableValueTypeRegistry, 'get'>;
+  valuesTypeRegistry: ValueTypeMap;
   dependencies: Dependencies;
 }): IGraphApi => ({
   variables,

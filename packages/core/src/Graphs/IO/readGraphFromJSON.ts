@@ -4,9 +4,9 @@ import { Link } from '../../Nodes/Link';
 import { NodeConfiguration } from '../../Nodes/Node';
 import { INode } from '../../Nodes/NodeInstance';
 import { Dependencies } from '../../Nodes/Registry/DependenciesRegistry';
-import { IQueriableNodeRegistry } from '../../Nodes/Registry/NodeTypeRegistry';
+import { NodeDefinitionsMap } from '../../Nodes/Registry/NodeTypeRegistry';
 import { Socket } from '../../Sockets/Socket';
-import { IQuerieableValueTypeRegistry } from '../../Values/ValueTypeRegistry';
+import { ValueTypeMap } from '../../Values/ValueTypeRegistry';
 import { Variable } from '../../Variables/Variable';
 import {
   createNode,
@@ -35,8 +35,8 @@ export function readGraphFromJSON({
   dependencies
 }: {
   graphJson: GraphJSON;
-  nodes: IQueriableNodeRegistry;
-  values: IQuerieableValueTypeRegistry;
+  nodes: NodeDefinitionsMap;
+  values: ValueTypeMap;
   dependencies: Dependencies;
 }): GraphInstance {
   const graphName = graphJson?.name || '';
@@ -179,8 +179,8 @@ function readNodeJSON({
   nodeJson
 }: {
   graph: IGraphApi;
-  nodes: Pick<IQueriableNodeRegistry, 'get' | 'contains'>;
-  values: Pick<IQuerieableValueTypeRegistry, 'get'>;
+  nodes: NodeDefinitionsMap;
+  values: ValueTypeMap;
   nodeJson: NodeJSON;
 }) {
   if (nodeJson.type === undefined) {
@@ -217,7 +217,7 @@ function readNodeJSON({
 }
 
 function readNodeParameterJSON(
-  valuesRegistry: Pick<IQuerieableValueTypeRegistry, 'get'>,
+  valuesRegistry: ValueTypeMap,
   node: INode,
   parametersJson: NodeParametersJSON
 ) {
@@ -229,9 +229,9 @@ function readNodeParameterJSON(
     const inputJson = parametersJson[socket.name];
     if ('value' in inputJson) {
       // eslint-disable-next-line no-param-reassign
-      socket.value = valuesRegistry
-        .get(socket.valueTypeName)
-        .deserialize(inputJson.value);
+      socket.value = valuesRegistry[socket.valueTypeName]?.deserialize(
+        inputJson.value
+      );
     }
 
     if ('link' in inputJson) {
@@ -281,7 +281,7 @@ function readNodeFlowsJSON(node: INode, flowsJson: FlowsJSON) {
 }
 
 function readVariablesJSON(
-  valuesRegistry: Pick<IQuerieableValueTypeRegistry, 'get'>,
+  valuesRegistry: ValueTypeMap,
   variablesJson: VariableJSON[]
 ) {
   const variables: GraphVariables = {};
@@ -292,9 +292,9 @@ function readVariablesJSON(
       variableJson.id,
       variableJson.name,
       variableJson.valueTypeName,
-      valuesRegistry
-        .get(variableJson.valueTypeName)
-        .deserialize(variableJson.initialValue)
+      valuesRegistry[variableJson.valueTypeName]?.deserialize(
+        variableJson.initialValue
+      )
     );
     variable.label = variableJson?.label ?? variable.label;
     variable.metadata = variableJson?.metadata ?? variable.metadata;
@@ -309,7 +309,7 @@ function readVariablesJSON(
 }
 
 function readCustomEventsJSON(
-  valuesRegistry: Pick<IQuerieableValueTypeRegistry, 'get'>,
+  valuesRegistry: ValueTypeMap,
   customEventsJson: CustomEventJSON[]
 ) {
   const customEvents: GraphCustomEvents = {};
@@ -323,9 +323,9 @@ function readCustomEventsJSON(
         new Socket(
           parameterJson.valueTypeName,
           parameterJson.name,
-          valuesRegistry
-            .get(parameterJson.valueTypeName)
-            .deserialize(parameterJson.defaultValue)
+          valuesRegistry[parameterJson.valueTypeName]?.deserialize(
+            parameterJson.defaultValue
+          )
         )
       );
     });

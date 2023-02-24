@@ -1,14 +1,11 @@
 import { Logger } from '../../Diagnostics/Logger';
-import { registerCoreProfile } from '../../Profiles/Core/registerCoreProfile';
-import { Registry } from '../../Registry';
+import { getCoreRegistry } from '../../Profiles/Core/registerCoreProfile';
 import { readGraphFromJSON } from './readGraphFromJSON';
-
-const registry = new Registry();
-registerCoreProfile(registry);
 
 Logger.onWarn.clear();
 
 describe('readGraphFromJSON', () => {
+  const registry = getCoreRegistry();
   it('throws if node ids are not unique', () => {
     const json = {
       variables: [],

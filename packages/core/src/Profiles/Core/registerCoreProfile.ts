@@ -3,14 +3,9 @@
 import { getNodeDescriptions } from '../../Nodes/Registry/NodeDescription';
 import {
   NodeDefinition,
-  NodeTypeRegistry
+  NodeDefinitionsMap
 } from '../../Nodes/Registry/NodeTypeRegistry';
-import { IRegistry } from '../../Registry';
-import { ValueType } from '../../Values/ValueType';
-import {
-  IQuerieableValueTypeRegistry,
-  ValueTypeRegistry
-} from '../../Values/ValueTypeRegistry';
+import { ValueTypeMap } from '../../Values/ValueTypeRegistry';
 import { getStringConversionsForValueType } from '../registerSerializersForValueType';
 import { ILifecycleEventEmitter } from './Abstractions/ILifecycleEventEmitter';
 import { ILogger } from './Abstractions/ILogger';
@@ -63,23 +58,32 @@ export const makeCoreDependencies = ({
   [loggerDependencyKey]: logger
 });
 
-export function getCoreValueTypes(): Array<ValueType<any, any>> {
-  return [BooleanValue, StringValue, IntegerValue, FloatValue];
+export function getCoreValueTypes(): ValueTypeMap {
+  return toMap(
+    [BooleanValue, StringValue, IntegerValue, FloatValue],
+    (v) => v.name
+  );
 }
 
-export function toMap<T extends { name: string }>(
-  elements: T[]
-): { [key: string]: T } {
-  return Object.fromEntries(elements.map((element) => [element.name, element]));
+export function toMap<T>(
+  elements: T[],
+  getName: (element: T) => string
+): Record<string, T> {
+  return Object.fromEntries(
+    elements.map((element) => [getName(element), element])
+  );
 }
 
-export function registerCoreValueTypes(values: ValueTypeRegistry) {
-  // pull in value type nodes
-  values.register(...getCoreValueTypes());
+function getStringConversions(values: ValueTypeMap): NodeDefinition[] {
+  return ['boolean', 'float', 'integer'].flatMap((valueTypeName) =>
+    getStringConversionsForValueType({ values, valueTypeName })
+  );
 }
 
-export function getCoreNodeDefinitions(): NodeDefinition[] {
-  return [
+export function getCoreNodeDefinitions(
+  values: ValueTypeMap
+): NodeDefinitionsMap {
+  const allNodeDefinitions: NodeDefinition[] = [
     ...getNodeDescriptions(StringNodes),
     ...getNodeDescriptions(BooleanNodes),
     ...getNodeDescriptions(IntegerNodes),
@@ -130,43 +134,19 @@ export function getCoreNodeDefinitions(): NodeDefinition[] {
     Gate,
     MultiGate,
     WaitAll.Description,
-    Counter
+    Counter,
+
+    ...getStringConversions(values)
   ];
+
+  // convert array to map
+  return toMap(allNodeDefinitions, (node) => node.typeName);
 }
 
-export function registerCoreNodes(nodes: NodeTypeRegistry) {
-  // pull in value type nodes
-  nodes.register(...getCoreNodeDefinitions());
-}
-
-export function getStringConversions(
-  values: IQuerieableValueTypeRegistry
-): NodeDefinition[] {
-  return ['boolean', 'float', 'integer'].flatMap((valueTypeName) =>
-    getStringConversionsForValueType({ values, valueTypeName })
-  );
-}
-
-export function registerSerializers({
-  values,
-  nodes
-}: {
-  nodes: NodeTypeRegistry;
-  values: IQuerieableValueTypeRegistry;
-}) {
-  // string converters
-  ['boolean', 'float', 'integer'].forEach((valueTypeName) => {
-    nodes.register(
-      ...getStringConversionsForValueType({ values, valueTypeName })
-    );
-  });
-}
-
-export function registerCoreProfile({
-  nodes,
-  values
-}: Pick<IRegistry, 'values' | 'nodes'>) {
-  registerCoreValueTypes(values);
-  registerCoreNodes(nodes);
-  registerSerializers({ nodes, values });
-}
+export const getCoreRegistry = () => {
+  const values = getCoreValueTypes();
+  return {
+    values,
+    nodes: getCoreNodeDefinitions(getCoreValueTypes())
+  };
+};

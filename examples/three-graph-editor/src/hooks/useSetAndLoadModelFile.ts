@@ -1,7 +1,8 @@
 import { GraphJSON } from '@behave-graph/core';
-import { useGLTF } from '@react-three/drei';
+import { useLoader } from '@react-three/fiber';
 import { useCallback, useState } from 'react';
 import { suspend } from 'suspend-react';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 function readFileContents(file: File) {
   // eslint-disable-next-line promise/avoid-new
@@ -78,7 +79,7 @@ const useSetAndLoadModelFile = ({
     dataUri: string;
   }>(initialModelFile);
 
-  const gltf = useGLTF(modelFile.dataUri);
+  const gltf = useLoader(GLTFLoader, modelFile.dataUri);
 
   const setModelFile = useCallback(async (modelFile: File) => {
     const modelFileDataUrl = (await dataUrlFromFile(modelFile)) as string;

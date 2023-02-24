@@ -6,7 +6,7 @@ import ReactFlow, {
 import { GraphJSON } from "@behave-graph/core";
 import CustomControls from "./Controls";
 import { NodePicker } from "./NodePicker";
-import { useCoreNodeDefinitionsAndValueTypes } from "../hooks/useRegistryWithCoreProfile";
+import { useCoreRegistry } from "../hooks/useCoreRegistry";
 import { useNodeSpecJson } from "../hooks/useNodeSpecJson";
 import { useBehaveGraphFlow } from "../hooks/useBehaveGraphFlow";
 import { useGraphRunner } from "../hooks/useGraphRunner";
@@ -20,9 +20,7 @@ type FlowProps = {
 }
 
 export const Flow: FC<FlowProps> = ({ initialGraph: graph, examples }) => {
-  const { nodeDefinitions, valuesDefinitions } = useCoreNodeDefinitionsAndValueTypes({});
-
-  const dependencies = useCoreDependencies();
+  const { nodeDefinitions, valuesDefinitions, dependencies: dependencies } = useCoreRegistry();
 
   const specJson = useNodeSpecJson({ nodes: nodeDefinitions, values: valuesDefinitions, dependencies });
 
@@ -48,7 +46,8 @@ export const Flow: FC<FlowProps> = ({ initialGraph: graph, examples }) => {
 
   const { togglePlay, playing } = useGraphRunner({
     graphJson,
-    valuesTypeRegistry: valuesDefinitions,
+    valueTypeDefinitions: valuesDefinitions,
+    nodeDefinitions,
     eventEmitter: dependencies.lifecycleEventEmitter,
     dependencies
   });

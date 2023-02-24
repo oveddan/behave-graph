@@ -1,9 +1,8 @@
 import { NodeCategory } from '../../Nodes/NodeDefinitions';
 import { Dependencies } from '../../Nodes/Registry/DependenciesRegistry';
-import { NodeDefinition } from '../../Nodes/Registry/NodeTypeRegistry';
+import { NodeDefinitionsMap } from '../../Nodes/Registry/NodeTypeRegistry';
 import { Choices } from '../../Sockets/Socket';
-import { ValueType } from '../../Values/ValueType';
-import { IQueriableRegistry } from '../../Values/ValueTypeRegistry';
+import { ValueTypeMap } from '../../Values/ValueTypeRegistry';
 import { createNode, IGraphApi } from '../Graph';
 import {
   ChoiceJSON,
@@ -24,8 +23,8 @@ export function writeNodeSpecsToJSON({
   nodes,
   dependencies
 }: {
-  values: IQueriableRegistry<ValueType>;
-  nodes: IQueriableRegistry<NodeDefinition>;
+  values: ValueTypeMap;
+  nodes: NodeDefinitionsMap;
   dependencies: Dependencies;
 }): NodeSpecJSON[] {
   const nodeSpecsJSON: NodeSpecJSON[] = [];
@@ -39,7 +38,7 @@ export function writeNodeSpecsToJSON({
     variables: {}
   };
 
-  nodes.getAllNames().forEach((nodeTypeName) => {
+  Object.keys(nodes).forEach((nodeTypeName) => {
     const node = createNode({
       graph,
       nodes,
@@ -60,7 +59,7 @@ export function writeNodeSpecsToJSON({
       const valueType =
         inputSocket.valueTypeName === 'flow'
           ? undefined
-          : values.get(inputSocket.valueTypeName);
+          : values[inputSocket.valueTypeName];
 
       let defaultValue = inputSocket.value;
       if (valueType !== undefined) {

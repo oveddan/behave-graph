@@ -1,8 +1,8 @@
 import {
   Dependencies,
-  IQueriableNodeRegistry,
-  IQuerieableValueTypeRegistry,
+  NodeDefinitionsMap,
   NodeSpecJSON,
+  ValueTypeMap,
   writeNodeSpecsToJSON
 } from '@behave-graph/core';
 import { useEffect, useState } from 'react';
@@ -12,8 +12,8 @@ export const useNodeSpecJson = ({
   nodes,
   dependencies
 }: {
-  values: IQuerieableValueTypeRegistry | undefined;
-  nodes: IQueriableNodeRegistry | undefined;
+  values: ValueTypeMap;
+  nodes: NodeDefinitionsMap;
   dependencies: Dependencies | undefined;
 }) => {
   const [specJson, setSpecJson] = useState<NodeSpecJSON[]>();
