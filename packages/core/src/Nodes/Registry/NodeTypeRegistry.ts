@@ -31,6 +31,7 @@ export const toNodeDefinitionMap = (
   return nodeDefinitionMap;
 };
 
+// Deprecated: use IQueriableRegistry<NodeDefinition> instead
 export class NodeTypeRegistry implements IQueriableNodeRegistry {
   private typeNameToNodeDescriptions: {
     [type: string]: NodeDefinition;

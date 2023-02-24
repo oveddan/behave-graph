@@ -11,6 +11,7 @@ export interface IQueriableRegistry<T> {
 
 export type IQuerieableValueTypeRegistry = IQueriableRegistry<ValueType>;
 
+// Deprecated: use IQueriableRegistry<ValueType> instead
 export class ValueTypeRegistry implements IQuerieableValueTypeRegistry {
   private readonly valueTypeNameToValueType: ValueTypeMap = {};
 
